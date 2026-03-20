@@ -1,5 +1,5 @@
 ﻿using API.Domain.Entities.UserManagement;
-using API.Infrastructure.Data;
+using API.Infrastructure.Persistence;
 using API.Infrastructure.Repositories.Interfaces;
 
 namespace API.Infrastructure.Repositories.Implementation

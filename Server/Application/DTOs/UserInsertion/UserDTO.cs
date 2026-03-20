@@ -2,7 +2,7 @@
 
 namespace API.Application.DTOs.UserInsertion;
 
-public class UserDTO
+public class UserDto
 {
     public Guid id { get; set; }
     public string name { get; set; } = string.Empty;

@@ -6,9 +6,9 @@ namespace API.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        User CreateUser(UserDTO user);
+        User CreateUser(UserDto user);
 
-        User UpdateUser(Guid userId, UserDTO user);
+        User UpdateUser(Guid userId, UserDto user);
 
         void DeleteUser(Guid userId);
 

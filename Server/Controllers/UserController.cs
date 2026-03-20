@@ -18,13 +18,13 @@ namespace API.Controllers
             _userService = userService;
         }
 
-        [HttpPost(Name = "addUser")]
+        /*[HttpPost(Name = "addUser")]
         public ActionResult<UserDTO> CreateUser([FromBody] UserDTO User)
         {
             //users.add(User);
 
             //return CreatedAtAction(nameof(GetUser), new { id = User.id }, User);
             return Ok(User);
-        }
+        }*/
     }
 }

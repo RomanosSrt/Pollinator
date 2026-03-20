@@ -12,7 +12,7 @@ namespace API.Application.Services.Implementation
         {
             _userRepository = userRepository;
         }
-        public User CreateUser(UserDTO user)
+        public User CreateUser(UserDto user)
         {
             var newUser = new User
             {
@@ -29,7 +29,7 @@ namespace API.Application.Services.Implementation
             var user = this.GetUser(userId);
         }
 
-        public User UpdateUser(Guid userId, UserDTO user)
+        public User UpdateUser(Guid userId, UserDto user)
         {
             throw new NotImplementedException();
         }

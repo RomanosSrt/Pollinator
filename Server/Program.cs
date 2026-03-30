@@ -1,4 +1,6 @@
+using API.Application.Services;
 using API.Infrastructure.Persistence;
+using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 builder.Services.AddPersistenceServices(connectionString);
+builder.Services.RegisterServices();
 
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -36,6 +39,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

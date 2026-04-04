@@ -8,7 +8,14 @@ namespace API.Infrastructure.Persistence
         {
             // Register the DbContext with the connection string from configuration
             services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(connectionstring, o => o.UseNetTopologySuite()));          
+            options.UseNpgsql(connectionstring, o => 
+            { 
+                o.UseNetTopologySuite();          
+                o.EnableRetryOnFailure(
+                    maxRetryCount: 3,
+                    maxRetryDelay: TimeSpan.FromSeconds(10),
+                    errorCodesToAdd: null);
+            }));
         }
     }
 }

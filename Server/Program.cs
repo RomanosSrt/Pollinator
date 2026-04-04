@@ -1,11 +1,14 @@
-using API.Application.Services;
+using API.Application.Services.System;
 using API.Infrastructure.Persistence;
 using API.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Logging.ClearProviders();
+builder.ConfigureSerilog();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,11 +26,20 @@ builder.Services.AddPersistenceServices(connectionString);
 builder.Services.RegisterServices();
 
 var app = builder.Build();
+app.Logger.LogInformation("Application started at {Date}", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")); 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
+    try { 
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        dbContext.Database.Migrate();
+    } catch (Exception ex)
+    {
+        app.Logger.LogInformation("Database Migration failed with error {exception}", ex.Message);
+        throw;
+    }
 }
+app.Logger.LogInformation("Database migration completed successfully");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -40,7 +52,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ResponseMiddleware>();
 
 app.MapControllers();
 

@@ -3,7 +3,7 @@ using API.Application.Services.Interfaces;
 using API.Infrastructure.Repositories.Implementation;
 using API.Infrastructure.Repositories.Interfaces;
 
-namespace API.Application.Services
+namespace API.Application.Services.System
 {
     public static class PolinatorServicesRegistration
     {

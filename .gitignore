@@ -3,6 +3,7 @@ bin/
 obj/
 *.user
 *.suo
+appsettings*.json
 
 # Visual Studio
 .vs/
@@ -22,3 +23,7 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+
+#Logs
+Logs/

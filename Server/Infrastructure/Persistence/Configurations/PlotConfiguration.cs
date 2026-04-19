@@ -9,9 +9,16 @@ namespace API.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Plot> builder)
         {
             builder.HasKey(p => p.PlotId);
+            
+            builder.Property(p => p.KAEK)
+                   .IsRequired()
+                   .HasMaxLength(12);
+
+            builder.HasIndex(p => p.KAEK)
+                   .IsUnique();
 
             builder.Property(p => p.Polygon)
-                   .HasColumnType("geometry")
+                   .HasColumnType("geometry(Polygon, 4326)")
                    .IsRequired();
 
             builder.Property(p => p.Area)
@@ -29,8 +36,7 @@ namespace API.Infrastructure.Persistence.Configurations
             builder.Property(p => p.isClaimed)
                    .HasDefaultValue(false);
 
-            builder.Property(p => p.FarmerId)
-                   .IsRequired(false);
+            builder.HasIndex(p => p.FarmerId);
 
             // 📅 Availabilities (1-N)
             builder.HasMany(p => p.Availabilities)

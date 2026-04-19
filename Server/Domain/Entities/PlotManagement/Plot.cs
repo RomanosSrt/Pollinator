@@ -7,8 +7,8 @@ namespace API.Domain.Entities.PlotManagement
     {
         public Guid PlotId { get; set; }
 
-        //geospatial
-        public Geometry Polygon { get; set; }
+        public required string KAEK { get; set; }
+        public required Geometry Polygon { get; set; }
         public double Area { get; set; }
         
         //agricultural info
@@ -16,21 +16,11 @@ namespace API.Domain.Entities.PlotManagement
 
         //ownership
         public bool isClaimed { get; set; } = false;
-        public Guid? FarmerId { get; set; }
+        public int? FarmerId { get; set; }
 
         //availability
         public ICollection<PlotAvailability>? Availabilities { get; set; }
         public ICollection<Reservation>? Reservations { get; set; }
 
-/*        Plot()
-        {
-            if (!isClaimed)
-            {
-                CropTypes = null;
-                Availabilities = null;
-                Reservations = null;
-            }
-
-        }*/
     }
 }

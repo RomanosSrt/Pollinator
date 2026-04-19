@@ -3,6 +3,7 @@ using System;
 using API.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417180612_AddKAEKToPlots")]
+    partial class AddKAEKToPlots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,8 +39,8 @@ namespace API.Migrations
                     b.Property<string>("CropTypes")
                         .HasColumnType("text");
 
-                    b.Property<int?>("FarmerId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("FarmerId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("KAEK")
                         .IsRequired()
@@ -54,8 +57,6 @@ namespace API.Migrations
                         .HasDefaultValue(false);
 
                     b.HasKey("PlotId");
-
-                    b.HasIndex("FarmerId");
 
                     b.HasIndex("KAEK")
                         .IsUnique();

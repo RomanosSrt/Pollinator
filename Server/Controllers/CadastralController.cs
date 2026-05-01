@@ -4,6 +4,7 @@ using API.Application.Services.Interfaces;
 using API.Domain.Entities.PlotManagement;
 using API.Domain.Entities.UserManagement;
 using API.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,23 @@ namespace API.Controllers
         {
             _logger = logger;
             _plotservice = plotService;
+        }
+
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetPlodbyKAEK(string id)
+        {
+            try
+            {
+                var plot = _plotservice.GetPlot(id);
+                if (plot == null) 
+                    return NotFound("Plot not found.");
+                return Ok(plot);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving cadastral data.");
+                return BadRequest("Internal server error.");
+            }
         }
 
         [HttpPost("import")]
@@ -48,7 +66,7 @@ namespace API.Controllers
 
                 // Transform 2100 → 4326                                                                                                           
                 /*var transformed = await _dbContext.Database.ExecuteSqlRawAsync(
-                    @"UPDATE ""Plots"" SET ""Polygon"" = ST_Transform(ST_SetSRID(""Polygon"", 2100), 4326)");
+                    @"UPDATE ""Plots"" SET ""polygon"" = ST_Transform(ST_SetSRID(""polygon"", 2100), 4326)");
  */
                 return Ok(new { Imported = plots.Count});
             }

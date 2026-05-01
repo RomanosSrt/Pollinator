@@ -7,6 +7,7 @@ namespace API.Application.Services.Interfaces
 {
     public interface IPlotService
     {
+        Plot? GetPlot(string KAEK);
         List<Plot> AddPlots(EsriJsonRoot features);
     }
 }

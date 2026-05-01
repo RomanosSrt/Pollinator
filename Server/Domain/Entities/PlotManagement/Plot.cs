@@ -5,22 +5,22 @@ namespace API.Domain.Entities.PlotManagement
 {
     public class Plot
     {
-        public Guid PlotId { get; set; }
+        public Guid plotId { get; set; }
 
-        public required string KAEK { get; set; }
-        public required Geometry Polygon { get; set; }
-        public double Area { get; set; }
+        public required string kaek { get; set; }
+        public required Geometry polygon { get; set; }
+        public double area { get; set; }
         
         //agricultural info
-        public ICollection<CropType>? CropTypes { get; set; }
+        public ICollection<CropType>? cropTypes { get; set; }
 
         //ownership
         public bool isClaimed { get; set; } = false;
-        public int? FarmerId { get; set; }
+        public int? farmerId { get; set; }
 
         //availability
-        public ICollection<PlotAvailability>? Availabilities { get; set; }
-        public ICollection<Reservation>? Reservations { get; set; }
+        public ICollection<PlotAvailability>? availabilities { get; set; }
+        public ICollection<Reservation>? reservations { get; set; }
 
     }
 }

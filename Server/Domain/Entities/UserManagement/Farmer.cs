@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace API.Domain.Entities.UserManagement
 {
-    public interface Farmer
+    public class Farmer : ApplicationUser
     {
         public Collection<Plot> Fields { get; set; }
 

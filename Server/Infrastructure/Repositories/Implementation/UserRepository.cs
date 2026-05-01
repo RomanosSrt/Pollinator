@@ -1,6 +1,7 @@
 ﻿using API.Domain.Entities.UserManagement;
 using API.Infrastructure.Persistence;
 using API.Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Infrastructure.Repositories.Implementation
 {
@@ -12,27 +13,13 @@ namespace API.Infrastructure.Repositories.Implementation
         {
             _context = context;
         }
-    
-        public User Add(User user)
+        public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-            return user;
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
-
-        public User Delete(Guid userId)
+        public async Task<ApplicationUser?> GetUserByUsernameAsync(string username)
         {
-            throw new NotImplementedException();
-        }
-
-        public User? Get(Guid id)
-        {
-            return _context.Users.Find(id);
-        }
-
-        public User Update(Guid userId, User user)
-        {
-            throw new NotImplementedException();
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
         }
     }
 }

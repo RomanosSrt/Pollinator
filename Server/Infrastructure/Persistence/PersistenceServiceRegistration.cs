@@ -12,7 +12,7 @@ namespace API.Infrastructure.Persistence
             { 
                 o.UseNetTopologySuite();          
                 o.EnableRetryOnFailure(
-                    maxRetryCount: 3,
+                    maxRetryCount: 1,
                     maxRetryDelay: TimeSpan.FromSeconds(10),
                     errorCodesToAdd: null);
             }));

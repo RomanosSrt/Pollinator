@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace API.Domain.Entities.UserManagement
 {
-    public interface Beekeeper
+    public class Beekeeper  : ApplicationUser
     {
         public Collection<CropType> honeyType { get; set; }
     }

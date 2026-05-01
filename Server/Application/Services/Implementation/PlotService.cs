@@ -19,6 +19,15 @@ namespace API.Application.Services.Implementation
             _logger = logger;
             _plotrepository = plotRepository;
         }
+
+        
+        public Plot? GetPlot(string KAEK)
+        {
+            return _plotrepository.GetByKAEK(KAEK);
+        }
+
+
+        #region InitPlots
         public List<Plot> AddPlots(EsriJsonRoot data)
         {
             var plots = _mapper.Map<List<Plot>>(data.features);
@@ -29,11 +38,11 @@ namespace API.Application.Services.Implementation
                 if (random.Next(2) == 0) 
                 { 
                     plot.isClaimed = true;
-                    plot.FarmerId = random.Next(0, 49);
+                    plot.farmerId = random.Next(0, 49);
                 }
             }
             return _plotrepository.Add(plots);
         }
-
+        #endregion
     }
 }

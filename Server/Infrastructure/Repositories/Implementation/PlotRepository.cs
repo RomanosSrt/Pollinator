@@ -14,6 +14,11 @@ namespace API.Infrastructure.Repositories.Implementation
             _context = context;
         }
     
+        public Plot? GetByKAEK(string KAEK)
+        {
+            return _context.Plots.FirstOrDefault(p => p.kaek == KAEK);
+        }
+
         public List<Plot> Add(List<Plot> plots)
         {
             foreach (var plot in plots)

@@ -1,4 +1,5 @@
-﻿using API.Domain.Entities.UserManagement;
+﻿using API.Application.DTOs.UserInsertion;
+using API.Domain.Entities.UserManagement;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,7 +18,7 @@ namespace API.Application.Services.Authentication
             _config = config;
         }
 
-        public string GenerateToken(ApplicationUser user)
+        public AuthResultDto GenerateToken(ApplicationUser user)
         {
             _logger.LogInformation("IN JwTService - Generating JWT token for user with ID: {UserId} and email: {Email}", user.Id, user.Email);
             var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]
@@ -39,7 +40,14 @@ namespace API.Application.Services.Authentication
                 expires: DateTime.UtcNow.AddHours(24),
                 signingCredentials: creds
             );
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new AuthResultDto
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                ExpiresAt = token.ValidTo,
+                UserId = user.Id,
+                Email = user.Email!,
+                UserType = user.userType.ToString()
+            };
         }
     }
 }

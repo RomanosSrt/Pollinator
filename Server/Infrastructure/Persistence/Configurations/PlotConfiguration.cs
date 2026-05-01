@@ -8,50 +8,44 @@ namespace API.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Plot> builder)
         {
-            builder.HasKey(p => p.PlotId);
+            builder.HasKey(p => p.plotId);
             
-            builder.Property(p => p.KAEK)
-                   .IsRequired()
+            builder.Property(p => p.kaek)
                    .HasMaxLength(12);
 
-            builder.HasIndex(p => p.KAEK)
+            builder.HasIndex(p => p.kaek)
                    .IsUnique();
 
-            builder.Property(p => p.Polygon)
-                   .HasColumnType("geometry(Polygon, 4326)")
+            builder.Property(p => p.polygon)
+                   .HasColumnType("geometry(polygon, 4326)")
                    .IsRequired();
 
-            builder.Property(p => p.Area)
+            builder.Property(p => p.area)
                    .IsRequired();
 
-            builder.Property(p => p.CropTypes)
-                   .HasConversion(
-                       v => string.Join(',', v),
-                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                             .Select(x => Enum.Parse<CropType>(x))
-                             .ToList()
-                   );
+            builder.Property(p => p.cropTypes)
+                   .HasConversion<int>();
 
             // 👨‍🌾 Ownership
             builder.Property(p => p.isClaimed)
                    .HasDefaultValue(false);
 
-            builder.HasIndex(p => p.FarmerId);
+            builder.HasIndex(p => p.farmerId);
 
-            // 📅 Availabilities (1-N)
-            builder.HasMany(p => p.Availabilities)
+            // 📅 availabilities (1-N)
+            builder.HasMany(p => p.availabilities)
                 .WithOne()
                 .HasForeignKey(a => a.PlotId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 📦 Reservations (1-N)
-            builder.HasMany(p => p.Reservations)
+            // 📦 reservations (1-N)
+            builder.HasMany(p => p.reservations)
                    .WithOne()
                    .HasForeignKey(r => r.PlotId)
                    .OnDelete(DeleteBehavior.Cascade);
 
             // ⚡ Spatial Index (VERY IMPORTANT for thesis)
-            builder.HasIndex(p => p.Polygon)
+            builder.HasIndex(p => p.polygon)
                    .HasMethod("GIST");
         }
     }

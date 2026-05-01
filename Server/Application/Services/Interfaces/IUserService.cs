@@ -6,12 +6,9 @@ namespace API.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        User CreateUser(UserDto user);
-
-        User UpdateUser(Guid userId, UserDto user);
-
-        void DeleteUser(Guid userId);
-
-        User? GetUser(Guid userId);
+        Task<AuthResultDto> CreateUser(UserDto user);
+        Task<string?> LoginUser(LoginDto loginDto);
+        Task<UserDto?> GetUserByEmailAsync(string email);
+        Task<UserDto?> GetUserByUsernameAsync(string username);
     }
 }

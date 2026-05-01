@@ -4,6 +4,7 @@ namespace API.Infrastructure.Repositories.Interfaces
 {
     public interface IPlotRepository
     {
-        List<Plot> Add(List<Plot> plots);
+        public Plot? GetByKAEK(string KAEK);
+        public List<Plot> Add(List<Plot> plots);
     }
 }

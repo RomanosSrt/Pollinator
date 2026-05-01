@@ -13,15 +13,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260418153416_CreateMockPlots")]
-    partial class CreateMockPlots
+    [Migration("20260501125221_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("ProductVersion", "10.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
@@ -29,41 +29,43 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Domain.Entities.PlotManagement.Plot", b =>
                 {
-                    b.Property<Guid>("PlotId")
+                    b.Property<Guid>("plotId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<double>("Area")
+                    b.Property<double>("area")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("CropTypes")
-                        .HasColumnType("text");
+                    b.Property<int[]>("cropTypes")
+                        .HasColumnType("integer[]");
 
-                    b.Property<int?>("FarmerId")
+                    b.Property<int?>("farmerId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("KAEK")
-                        .IsRequired()
-                        .HasMaxLength(12)
-                        .HasColumnType("character varying(12)");
-
-                    b.Property<Geometry>("Polygon")
-                        .IsRequired()
-                        .HasColumnType("geometry(Polygon, 4326)");
 
                     b.Property<bool>("isClaimed")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.HasKey("PlotId");
+                    b.Property<string>("kaek")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
 
-                    b.HasIndex("KAEK")
+                    b.Property<Geometry>("polygon")
+                        .IsRequired()
+                        .HasColumnType("geometry(polygon, 4326)");
+
+                    b.HasKey("plotId");
+
+                    b.HasIndex("farmerId");
+
+                    b.HasIndex("kaek")
                         .IsUnique();
 
-                    b.HasIndex("Polygon");
+                    b.HasIndex("polygon");
 
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Polygon"), "GIST");
+                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("polygon"), "GIST");
 
                     b.ToTable("Plots");
                 });
@@ -121,24 +123,67 @@ namespace API.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("API.Domain.Entities.UserManagement.User", b =>
+            modelBuilder.Entity("API.Domain.Entities.UserManagement.ApplicationUser", b =>
                 {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("email")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("usertype")
+                    b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.HasKey("id");
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("fullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("userType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -146,7 +191,7 @@ namespace API.Migrations
             modelBuilder.Entity("API.Domain.Entities.PlotManagement.PlotAvailability", b =>
                 {
                     b.HasOne("API.Domain.Entities.PlotManagement.Plot", null)
-                        .WithMany("Availabilities")
+                        .WithMany("availabilities")
                         .HasForeignKey("PlotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -155,7 +200,7 @@ namespace API.Migrations
             modelBuilder.Entity("API.Domain.Entities.PlotManagement.Reservation", b =>
                 {
                     b.HasOne("API.Domain.Entities.PlotManagement.Plot", null)
-                        .WithMany("Reservations")
+                        .WithMany("reservations")
                         .HasForeignKey("PlotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -163,9 +208,9 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Domain.Entities.PlotManagement.Plot", b =>
                 {
-                    b.Navigation("Availabilities");
+                    b.Navigation("availabilities");
 
-                    b.Navigation("Reservations");
+                    b.Navigation("reservations");
                 });
 #pragma warning restore 612, 618
         }

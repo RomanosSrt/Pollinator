@@ -23,7 +23,7 @@ if (string.IsNullOrEmpty(connectionString))
 }
 
 builder.Services.AddPersistenceServices(connectionString);
-builder.Services.RegisterServices();
+builder.Services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
 app.Logger.LogInformation("Application started at {Date}", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")); 
@@ -34,8 +34,7 @@ using (var scope = app.Services.CreateScope())
         dbContext.Database.Migrate();
     } catch (Exception ex)
     {
-        app.Logger.LogInformation("Database Migration failed with error {exception}", ex.Message);
-        throw;
+        app.Logger.LogError("Database Migration failed with error: {ErrorMessage}", ex.Message);
     }
 }
 app.Logger.LogInformation("Database migration completed successfully");
@@ -48,10 +47,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
-
+//app.UseCors("AllowFrontend"); // Must come BEFORE UseAuthentication/UseAuthorization
+app.UseAuthentication();        //Must come BEFORE UseAuthorization
 app.UseAuthorization();
-
 app.UseMiddleware<ResponseMiddleware>();
 
 app.MapControllers();

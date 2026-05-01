@@ -19,30 +19,44 @@ namespace API.Migrations
                 name: "Plots",
                 columns: table => new
                 {
-                    PlotId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Polygon = table.Column<Geometry>(type: "geometry", nullable: false),
-                    Area = table.Column<double>(type: "double precision", nullable: false),
-                    CropTypes = table.Column<string>(type: "text", nullable: true),
+                    plotId = table.Column<Guid>(type: "uuid", nullable: false),
+                    kaek = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
+                    polygon = table.Column<Geometry>(type: "geometry(polygon, 4326)", nullable: false),
+                    area = table.Column<double>(type: "double precision", nullable: false),
+                    cropTypes = table.Column<int[]>(type: "integer[]", nullable: true),
                     isClaimed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    FarmerId = table.Column<Guid>(type: "uuid", nullable: true)
+                    farmerId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Plots", x => x.PlotId);
+                    table.PrimaryKey("PK_Plots", x => x.plotId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    usertype = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    fullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    userType = table.Column<int>(type: "integer", nullable: false),
+                    UserName = table.Column<string>(type: "text", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "text", nullable: true),
+                    Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "text", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,7 +76,7 @@ namespace API.Migrations
                         name: "FK_PlotAvailability_Plots_PlotId",
                         column: x => x.PlotId,
                         principalTable: "Plots",
-                        principalColumn: "PlotId",
+                        principalColumn: "plotId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -84,7 +98,7 @@ namespace API.Migrations
                         name: "FK_Reservations_Plots_PlotId",
                         column: x => x.PlotId,
                         principalTable: "Plots",
-                        principalColumn: "PlotId",
+                        principalColumn: "plotId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -94,15 +108,32 @@ namespace API.Migrations
                 column: "PlotId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Plots_Polygon",
+                name: "IX_Plots_farmerId",
                 table: "Plots",
-                column: "Polygon")
+                column: "farmerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plots_kaek",
+                table: "Plots",
+                column: "kaek",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plots_polygon",
+                table: "Plots",
+                column: "polygon")
                 .Annotation("Npgsql:IndexMethod", "GIST");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_PlotId",
                 table: "Reservations",
                 column: "PlotId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Email",
+                table: "Users",
+                column: "Email",
+                unique: true);
         }
 
         /// <inheritdoc />

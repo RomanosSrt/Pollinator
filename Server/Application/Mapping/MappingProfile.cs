@@ -1,4 +1,5 @@
-﻿using API.Application.DTOs.PlotInsertion;
+﻿using API.Application.DTOs.PlotHandling;
+using API.Application.DTOs.PlotHnadling;
 using API.Application.DTOs.UserInsertion;
 using API.Domain.Entities.PlotManagement;
 using API.Domain.Entities.UserManagement;
@@ -22,6 +23,14 @@ namespace API.Application.Mapping
                 )))
                 .ForMember(dest => dest.isClaimed, opt => opt.Ignore())
                 .ForMember(dest => dest.farmerId, opt => opt.MapFrom(src => (Guid?)null));
+
+            CreateMap<Plot, PlotDto>()
+                .ForMember(dest => dest.plotId, opt => opt.MapFrom(src => src.plotId))
+                .ForMember(dest => dest.polygon, opt => opt.MapFrom(src => src.polygon))
+                .ForMember(dest => dest.area, opt => opt.MapFrom(src => src.area))
+                .ForMember(dest => dest.cropTypes, opt => opt.MapFrom(src => src.cropTypes))
+                .ForMember(dest => dest.isClaimed, opt => opt.MapFrom(src => src.isClaimed))
+                .ForMember(dest => dest.farmerId, opt => opt.MapFrom(src => src.farmerId));
 
             CreateMap<UserDto, ApplicationUser>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))

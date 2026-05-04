@@ -38,7 +38,7 @@ namespace API.Controllers
             return Ok(new { token = token });
         }
 
-        [HttpGet("email/{email}")]
+        [HttpGet("findByEmail/{email}")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             var user = await _userService.GetUserByEmailAsync(email);
@@ -50,7 +50,7 @@ namespace API.Controllers
             return Ok(user);
         }
 
-        [HttpGet("username/{username}")]
+        [HttpGet("findByUsername/{username}")]
         public async Task<IActionResult> GetUserByUsername(string username)
         {
             var user = await _userService.GetUserByUsernameAsync(username);

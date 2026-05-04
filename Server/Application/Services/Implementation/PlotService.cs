@@ -1,4 +1,5 @@
-﻿using API.Application.DTOs.PlotInsertion;
+﻿using API.Application.DTOs.PlotHandling;
+using API.Application.DTOs.PlotHnadling;
 using API.Application.Services.Interfaces;
 using API.Domain.Entities.PlotManagement;
 using API.Infrastructure.Persistence;
@@ -20,10 +21,15 @@ namespace API.Application.Services.Implementation
             _plotrepository = plotRepository;
         }
 
-        
-        public Plot? GetPlot(string KAEK)
+        public async Task<PlotDto?> GetPlot(string KAEK)
         {
-            return _plotrepository.GetByKAEK(KAEK);
+            var plot = await _plotrepository.GetByKAEK(KAEK);
+            if (plot == null)
+            {
+                _logger.LogWarning("No plot found with KAEK: {KAEK}", KAEK);
+                return null;
+            }
+            return _mapper.Map<PlotDto>(plot);
         }
 
 

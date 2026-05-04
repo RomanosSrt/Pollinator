@@ -34,6 +34,12 @@ namespace API.Application.Services.Implementation
         }
         public async Task<AuthResultDto> CreateUser(UserDto user)
         {
+            bool emailCheck = _userRepository.GetUserByEmailAsync(user.email) != null;
+            if (emailCheck)
+            {
+                _logger.LogWarning("Attempt to create user with existing email {Email}", user.email);
+                throw new Exception("Email or username already exists");
+            }
             var newUser = _mapper.Map<ApplicationUser>(user);
             var result = await _userManager.CreateAsync(newUser, user.password);
             if (!result.Succeeded)

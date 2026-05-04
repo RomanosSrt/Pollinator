@@ -2,6 +2,7 @@
 using API.Domain.Entities.UserManagement;
 using API.Infrastructure.Persistence;
 using API.Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Infrastructure.Repositories.Implementation
 {
@@ -14,9 +15,9 @@ namespace API.Infrastructure.Repositories.Implementation
             _context = context;
         }
     
-        public Plot? GetByKAEK(string KAEK)
+        public async Task<Plot?> GetByKAEK(string KAEK)
         {
-            return _context.Plots.FirstOrDefault(p => p.kaek == KAEK);
+            return await _context.Plots.SingleOrDefaultAsync(p => p.kaek == KAEK);
         }
 
         public List<Plot> Add(List<Plot> plots)

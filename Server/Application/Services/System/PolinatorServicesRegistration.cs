@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using NetTopologySuite.IO.Converters;
 using System.Text;
 
 namespace API.Application.Services.System
@@ -19,13 +21,12 @@ namespace API.Application.Services.System
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-        Console.WriteLine("Registering services...");
+            Console.WriteLine("Registering services...");
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlotRepository, PlotRepository>();
             services.AddScoped<IPlotService, PlotService>();
             services.AddScoped<IJwtService, JwtService>();
-            services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
             services.AddIdentity<ApplicationUser, IdentityRole>(opt => { 
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireLowercase = false;
@@ -38,6 +39,13 @@ namespace API.Application.Services.System
             })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+           
+            services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+            services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory());
+            });
 
             var jwtKey = configuration["Jwt:Key"]
                 ?? throw new InvalidOperationException("JWT key is not configured.");

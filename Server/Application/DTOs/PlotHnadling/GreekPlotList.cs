@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace API.Application.DTOs.PlotInsertion
+namespace API.Application.DTOs.PlotHandling
 {
     public class EsriJsonRoot
     {

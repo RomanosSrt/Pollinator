@@ -8,11 +8,12 @@ namespace API.Infrastructure.Repositories.Implementation
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
-    
+
         public UserRepository(AppDbContext context)
         {
             _context = context;
         }
+
         public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -20,6 +21,10 @@ namespace API.Infrastructure.Repositories.Implementation
         public async Task<ApplicationUser?> GetUserByUsernameAsync(string username)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        }
+        public async Task<bool> UserExistsByEmailAsync(string email)
+        {
+            return await _context.Users.AnyAsync(u => u.Email == email);
         }
     }
 }

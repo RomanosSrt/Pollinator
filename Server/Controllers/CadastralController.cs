@@ -1,4 +1,4 @@
-﻿using API.Application.DTOs.PlotInsertion;
+﻿using API.Application.DTOs.PlotHandling;
 using API.Application.Services.Implementation;
 using API.Application.Services.Interfaces;
 using API.Domain.Entities.PlotManagement;
@@ -14,6 +14,7 @@ using System.Text.Json;
 
 namespace API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CadastralController : ControllerBase
@@ -30,18 +31,11 @@ namespace API.Controllers
         [HttpGet("id/{id}")]
         public async Task<IActionResult> GetPlodbyKAEK(string id)
         {
-            try
-            {
-                var plot = _plotservice.GetPlot(id);
-                if (plot == null) 
-                    return NotFound("Plot not found.");
-                return Ok(plot);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error retrieving cadastral data.");
-                return BadRequest("Internal server error.");
-            }
+
+            var plot = await _plotservice.GetPlot(id);
+            if (plot is null) 
+                throw new Exception($"Plot with KAEK {id} not found.");
+            return Ok(plot);
         }
 
         [HttpPost("import")]

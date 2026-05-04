@@ -60,6 +60,35 @@ namespace API.Application.Services.System
                     };
             });
 
+            services.AddSwaggerGen(opts =>
+            {
+                // Define the security scheme (how tokens are sent)
+                opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Enter your JWT token"
+                });
+
+                // Apply it to all [Authorize] endpoints
+                opts.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
+
+
             services.AddAuthorizationBuilder()
                 .AddPolicy("BeekeeperOnly", policy => policy.RequireRole("BEEKEEPER"))
                 .AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));

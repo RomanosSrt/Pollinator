@@ -29,5 +29,18 @@ namespace API.Infrastructure.Repositories.Implementation
             _context.SaveChanges();
             return plots;
         }
+
+        public async Task<List<Plot>?> GetByClaim(bool isClaimed)
+        {
+            var plots = await _context.Plots.Where(p => p.isClaimed == isClaimed).ToListAsync();
+            return plots;
+        }
+
+        public async Task<List<Plot>?> GetByCropType(List<CropType> cropTypes)
+        {
+            var plots = await _context.Plots.Where(p => p.cropTypes != null).ToListAsync();
+            var filteredPlots = plots.Where(p => p.cropTypes != null && p.cropTypes.All(ct => cropTypes.Contains(ct))).ToList();
+            return filteredPlots;
+        }
     }
 }

@@ -10,5 +10,7 @@ namespace API.Application.Services.Interfaces
     {
         Task<PlotDto?> GetPlot(string KAEK);
         List<Plot> AddPlots(EsriJsonRoot features);
+        Task<List<PlotDto?>> GetPlotsbyClaim(bool isClaimed);
+        Task<List<PlotDto?>> GetPlotsbyCropType(List<CropType> cropTypes);
     }
 }

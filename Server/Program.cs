@@ -25,11 +25,7 @@ if (string.IsNullOrEmpty(connectionString))
 
 builder.Services.AddPersistenceServices(connectionString);
 builder.Services.RegisterServices(builder.Configuration);
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory());
-    });
+
 
 var app = builder.Build();
 app.Logger.LogInformation("Application started at {Date}", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")); 

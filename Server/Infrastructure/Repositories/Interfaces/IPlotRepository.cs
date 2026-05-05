@@ -4,7 +4,9 @@ namespace API.Infrastructure.Repositories.Interfaces
 {
     public interface IPlotRepository
     {
-        public Task<Plot?> GetByKAEK(string KAEK);
-        public List<Plot> Add(List<Plot> plots);
+        Task<Plot?> GetByKAEK(string KAEK);
+        Task<List<Plot>?> GetByClaim(bool isClaimed);
+        Task<List<Plot>?> GetByCropType(List<CropType> cropTypes);
+        List<Plot> Add(List<Plot> plots);
     }
 }

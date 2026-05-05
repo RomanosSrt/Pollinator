@@ -27,9 +27,31 @@ namespace API.Application.Services.Implementation
             if (plot == null)
             {
                 _logger.LogWarning("No plot found with KAEK: {KAEK}", KAEK);
-                return null;
+                return null;            // TODO: Throw an exception or return a Result type to better handle this case.
             }
             return _mapper.Map<PlotDto>(plot);
+        }
+
+        public async Task<List<PlotDto?>> GetPlotsbyClaim(bool isClaimed)
+        {
+            var claimedPlots = await _plotrepository.GetByClaim(isClaimed);
+            if (claimedPlots == null || !claimedPlots.Any())
+            {
+                _logger.LogInformation("No plots found with isClaimed: {isClaimed}", isClaimed);
+                throw new NullReferenceException($"No plots found with isClaimed: {isClaimed}");
+            }
+            return _mapper.Map<List<PlotDto?>>(claimedPlots);
+        }
+
+        public async Task<List<PlotDto?>> GetPlotsbyCropType(List<CropType> cropTypes)
+        {
+            var selectedPlots = await _plotrepository.GetByCropType(cropTypes);
+            if (selectedPlots == null || !selectedPlots.Any())
+            {
+                _logger.LogInformation("No plots found with crop types: {cropTypes}", string.Join(", ", cropTypes));
+                throw new NullReferenceException($"No plots found with crop types: {string.Join(", ", cropTypes)}");
+            }
+            return _mapper.Map<List<PlotDto?>>(selectedPlots);
         }
 
 

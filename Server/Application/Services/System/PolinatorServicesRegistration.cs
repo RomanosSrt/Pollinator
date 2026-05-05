@@ -21,12 +21,16 @@ namespace API.Application.Services.System
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
+            #region custom services
             Console.WriteLine("Registering services...");
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlotRepository, PlotRepository>();
             services.AddScoped<IPlotService, PlotService>();
             services.AddScoped<IJwtService, JwtService>();
+            #endregion
+
+            #region model configuration
             services.AddIdentity<ApplicationUser, IdentityRole>(opt => { 
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireLowercase = false;
@@ -39,14 +43,15 @@ namespace API.Application.Services.System
             })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-           
             services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
             services.AddControllers()
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory());
             });
+            #endregion
 
+            #region authentication/authorization
             var jwtKey = configuration["Jwt:Key"]
                 ?? throw new InvalidOperationException("JWT key is not configured.");
 
@@ -110,6 +115,7 @@ namespace API.Application.Services.System
                           .AllowAnyMethod();
                 });
             });*/
+            #endregion
         }
     }
 }

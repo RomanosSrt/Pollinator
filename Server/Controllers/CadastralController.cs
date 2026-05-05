@@ -14,7 +14,7 @@ using System.Text.Json;
 
 namespace API.Controllers
 {
-    [Authorize]
+    //[Authorize]       TODO: Add authorization on production
     [ApiController]
     [Route("api/[controller]")]
     public class CadastralController : ControllerBase
@@ -36,6 +36,20 @@ namespace API.Controllers
             if (plot is null) 
                 throw new Exception($"Plot with KAEK {id} not found.");
             return Ok(plot);
+        }
+
+        [HttpGet("isClaimed")]
+        public async Task<IActionResult> GetPlotsByClaim([FromBody] bool isClaimed)
+        {
+            var plots = await _plotservice.GetPlotsbyClaim(isClaimed);
+            return Ok(new { count = plots.Count, plots });
+        }
+
+        [HttpPost("cropTypes")]
+        public async Task<IActionResult> GetPlotsByCropTypes(List<CropType> cropTypes)
+        {
+            var plots = await _plotservice.GetPlotsbyCropType(cropTypes);
+            return Ok(new { count = plots.Count, plots });
         }
 
         [HttpPost("import")]

@@ -11,11 +11,11 @@ namespace API.Infrastructure.Persistence
             options.UseNpgsql(connectionstring, o => 
             { 
                 o.UseNetTopologySuite();          
-                o.EnableRetryOnFailure(
-                    maxRetryCount: 1,
+/*                o.EnableRetryOnFailure(
+                    maxRetryCount: 0,
                     maxRetryDelay: TimeSpan.FromSeconds(10),
                     errorCodesToAdd: null);
-            }));
+*/            }));
         }
     }
 }

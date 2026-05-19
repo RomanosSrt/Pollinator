@@ -20,7 +20,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("health/")]
+        [HttpGet()]
         public async Task<IActionResult> HealthCheck()
         {
             try
@@ -37,7 +37,7 @@ namespace API.Controllers
                 _logger.LogError(ex, "Database connection failed during health check.");
                 throw new Exception("Database connection failed");
             }
-            return Ok();
+            return Ok(new { status = "Pollinator is healthy!"});
         }
     }
 }

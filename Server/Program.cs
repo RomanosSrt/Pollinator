@@ -18,10 +18,6 @@ builder.Services.AddSwaggerGen();
 
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Failed to build, connectionstring empty.");
-if (string.IsNullOrEmpty(connectionString))
-{
-    throw new Exception();
-}
 
 builder.Services.AddPersistenceServices(connectionString);
 builder.Services.RegisterServices(builder.Configuration);

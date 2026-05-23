@@ -2,7 +2,6 @@
 using API.Application.DTOs.PlotHnadling;
 using API.Application.Services.Interfaces;
 using API.Domain.Entities.PlotManagement;
-using API.Infrastructure.Persistence;
 using API.Infrastructure.Repositories.Interfaces;
 using AutoMapper;
 

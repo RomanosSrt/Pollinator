@@ -4,7 +4,7 @@
     {
         public bool Success { get; set; }
         public int StatusCode { get; set; }
-        public T? Data { get; set; }
+        public T? Data { get; set; } 
         public string? Message { get; set; }
         public string? TraceId { get; set; }
 
@@ -14,14 +14,16 @@
                 Success = true,
                 StatusCode = statusCode,
                 TraceId = traceId,
+                Message = null,
                 Data = data
             };
 
-        public static ApiResponse<T> FailResponse(string message, int statusCode, string traceId)
+        public static ApiResponse<string> FailResponse(string message, int statusCode, string traceId)
             => new()
             {
                 Success = false,
                 StatusCode = statusCode,
+                Data = null,
                 Message = message,
                 TraceId = traceId
             };

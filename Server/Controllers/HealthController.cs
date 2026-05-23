@@ -1,8 +1,10 @@
-using API.Application.Services.Interfaces;
+using API.Application.DTOs.HealtCheck;
 using API.Application.DTOs.UserInsertion;
+using API.Application.Services.Interfaces;
 using API.Domain.Entities.UserManagement;
-using Microsoft.AspNetCore.Mvc;
 using API.Infrastructure.Persistence;
+using API.Middleware;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -21,7 +23,11 @@ namespace API.Controllers
 
 
         [HttpGet()]
-        public async Task<IActionResult> HealthCheck()
+        [ProducesResponseType(typeof(ApiResponse<IsHealthy>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<IsHealthy> HealthCheck()
         {
             try
             {
@@ -37,7 +43,7 @@ namespace API.Controllers
                 _logger.LogError(ex, "Database connection failed during health check.");
                 throw new Exception("Database connection failed");
             }
-            return Ok(new { status = "Pollinator is healthy!"});
+            return new IsHealthy();
         }
     }
 }

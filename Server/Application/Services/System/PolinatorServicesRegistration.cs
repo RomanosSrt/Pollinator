@@ -19,10 +19,10 @@ namespace API.Application.Services.System
 {
     public static class PolinatorServicesRegistration
     {
-        public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
+        public static void RegisterPollinatorServices(this IServiceCollection services, IConfiguration configuration)
         {
             #region custom services
-            Console.WriteLine("Registering services...");
+            Console.WriteLine("Registering Pollinator services...");
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlotRepository, PlotRepository>();

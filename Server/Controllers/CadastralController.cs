@@ -28,6 +28,7 @@ namespace API.Controllers
             _plotservice = plotService;
         }
 
+        #region Query
         [HttpGet("id/{id}")]
         public async Task<IActionResult> GetPlodbyKAEK(string id)
         {
@@ -51,7 +52,9 @@ namespace API.Controllers
             var plots = await _plotservice.GetPlotsbyCropType(cropTypes);
             return Ok(new { count = plots.Count, plots });
         }
+        #endregion
 
+        #region Import
         [HttpPost("import")]
         public async Task<IActionResult> ImportCadastralData(IFormFile file)
         {
@@ -84,5 +87,7 @@ namespace API.Controllers
                 return StatusCode(500, "Internal server error.");
             }
         }
+
+        #endregion
     }
 }

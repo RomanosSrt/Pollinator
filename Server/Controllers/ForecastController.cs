@@ -1,11 +1,8 @@
-﻿using API.Application.DTOs.UserInsertion;
-using API.Application.Services.Interfaces;
-using API.Middleware;
+﻿using API.Middleware;
 using ForecastService.Contracts;
 using ForecastService.Models.OpenMeteo.Responses;
 using ForecastService.Models.Pollinator.QueryParams;
 using ForecastService.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -23,6 +20,7 @@ namespace API.Controllers
             _forecastService = forecastService;
         }
 
+        //[Authorize]
         [HttpGet("PollenIndexes")]
         [ProducesResponseType(typeof(ApiResponse<ServiceResponse<PollenIndexesResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]

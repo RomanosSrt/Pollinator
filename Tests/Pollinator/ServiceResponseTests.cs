@@ -12,9 +12,9 @@ namespace Tests.Pollinator
         {
             var sr = new ServiceResponse<string>("hello");
 
-            Assert.True(sr.IsSuccess);
-            Assert.Equal("hello", sr.Response);
-            Assert.Null(sr.ErrorMessage);
+            Assert.False(sr.IsSuccess);
+            Assert.Equal("hello", sr.ErrorMessage);
+            Assert.Null(sr.Response);
         }
 
         [Fact]
@@ -24,6 +24,7 @@ namespace Tests.Pollinator
 
             Assert.False(sr.IsSuccess);
             Assert.NotNull(sr.ErrorMessage);
+            Assert.Null(sr.Response);
         }
 
         [Theory]

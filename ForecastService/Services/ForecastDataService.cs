@@ -1,5 +1,6 @@
 ﻿using ForecastService.Contracts;
 using ForecastService.Models.OpenMeteo.Responses;
+using ForecastService.Models.Pollinator;
 using ForecastService.Models.Pollinator.QueryParams;
 using ForecastService.Models.Pollinator.Settings;
 using Microsoft.AspNetCore.Http;

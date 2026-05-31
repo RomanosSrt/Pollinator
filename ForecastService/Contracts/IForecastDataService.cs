@@ -1,6 +1,6 @@
 ﻿using ForecastService.Models.OpenMeteo.Responses;
+using ForecastService.Models.Pollinator;
 using ForecastService.Models.Pollinator.QueryParams;
-using ForecastService.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;

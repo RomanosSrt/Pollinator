@@ -16,6 +16,7 @@ namespace API.Controllers
 {
     //[Authorize]       TODO: Add authorization on production
     [ApiController]
+    [Obsolete]
     [Route("api/[controller]")]
     public class CadastralController : ControllerBase
     {

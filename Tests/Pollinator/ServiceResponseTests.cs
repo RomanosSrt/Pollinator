@@ -1,4 +1,5 @@
-﻿using ForecastService.Services;
+﻿using ForecastService.Models.Pollinator;
+using ForecastService.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;

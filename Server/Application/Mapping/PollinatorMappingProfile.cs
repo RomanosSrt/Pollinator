@@ -8,9 +8,9 @@ using NetTopologySuite.Geometries;
 
 namespace API.Application.Mapping
 {
-    public class MappingProfile : Profile
+    public class PollinatorMappingProfile : Profile
     {
-        public MappingProfile()
+        public PollinatorMappingProfile()
         {
             var factory = new GeometryFactory(new PrecisionModel(), 4326);
             

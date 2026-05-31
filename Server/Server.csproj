@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ForecastService\ForecastService.csproj" />
+    <ProjectReference Include="..\YpenService\YpenService.csproj" />
   </ItemGroup>
 
 </Project>

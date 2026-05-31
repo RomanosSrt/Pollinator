@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ForecastService.Services
+namespace YpenService.Models.Pollinator
 {
     public class ServiceResponse<T>
     {

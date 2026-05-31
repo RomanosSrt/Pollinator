@@ -12,10 +12,12 @@ namespace ForecastService.Models.Pollinator.QueryParams
         [JsonPropertyName("latitude")]
         public List<float> Latitudes { get; set; } = new List<float>();
         [Required]
-        [JsonPropertyName("longtitude")]
+        [JsonPropertyName("longitude")]
         public List<float> Longtitudes { get; set; } = new List<float>();
         [JsonPropertyName("hourly")]
         public List<PollenType> HourlyPollenTypes { get; set; } = new List<PollenType>();
+        [JsonPropertyName("current")]
+        public List<PollenType> CurrentPollenTypes { get; set; } = new List<PollenType>();
         [Required]
         [JsonPropertyName("forecast_days")]
         public int ForecastPeriod { get; set; } = 3;

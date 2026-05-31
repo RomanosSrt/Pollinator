@@ -2,6 +2,7 @@
 using ForecastService.Models.Pollinator.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ForecastService.Services
 {

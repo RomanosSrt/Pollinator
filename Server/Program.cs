@@ -5,6 +5,7 @@ using ForecastService.Services;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.IO.Converters;
 using Serilog;
+using YpenService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 builder.Services.AddPersistenceServices(connectionString);
 builder.Services.RegisterPollinatorServices(builder.Configuration);
 builder.Services.AddForecastServices(builder.Configuration);
+builder.Services.AddYpenServices(builder.Configuration);
 
 var app = builder.Build();
 app.Logger.LogInformation("Application started at {Date}", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")); 
@@ -46,7 +48,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.UseResponseCompression();
 app.UseHttpsRedirection();
 //app.UseCors("AllowFrontend"); // Must come BEFORE UseAuthentication/UseAuthorization
 app.UseAuthentication();        //Must come BEFORE UseAuthorization

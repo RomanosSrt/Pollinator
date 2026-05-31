@@ -9,6 +9,7 @@ using API.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -43,7 +44,7 @@ namespace API.Application.Services.System
             })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+            services.AddAutoMapper(cfg => cfg.AddProfile<PollinatorMappingProfile>());
             services.AddControllers()
             .AddJsonOptions(options =>
             {
@@ -115,6 +116,14 @@ namespace API.Application.Services.System
                           .AllowAnyMethod();
                 });
             });*/
+            #endregion
+
+            #region response optimization
+            services.AddResponseCompression(opts =>
+            {
+                opts.Providers.Add<GzipCompressionProvider>();  //compress response for big byte streams automatical decompression from browser
+            });
+            services.AddMemoryCache();      //use cache instead of hitting the database for every request
             #endregion
         }
     }

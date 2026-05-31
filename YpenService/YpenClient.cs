@@ -1,18 +1,18 @@
-﻿using ForecastService.Contracts;
+﻿using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
-using ForecastService.Models.OpenMeteo;
+using YpenService.Contracts;
+using YpenService.Models.Ypen;
 
-namespace ForecastService
+namespace YpenService
 {
-    public class ForecastClient : IForecastClient
+    public class YpenClient : IYpenClient
     {
-        private readonly ILogger<ForecastClient> _logger;
+        private readonly ILogger<YpenClient> _logger;
         private readonly HttpClient _httpClient;
 
-        public ForecastClient(ILogger<ForecastClient> logger, HttpClient httpClient)
+        public YpenClient(ILogger<YpenClient> logger, HttpClient httpClient)
         {
             _logger = logger;
             _httpClient = httpClient;
@@ -37,14 +37,14 @@ namespace ForecastService
                 using var response = await _httpClient.SendAsync(request);
 
                 if (!response.IsSuccessStatusCode)
-                    throw new HttpRequestException($"Open-Meteo Response status code not successful: {(int)response.StatusCode} ({response.ReasonPhrase}).");
+                    throw new HttpRequestException($"YPEN Response status code not successful: {(int)response.StatusCode} ({response.ReasonPhrase}).");
 
                 if (response.StatusCode == HttpStatusCode.NoContent)
                     throw new HttpRequestException($"Pollinator Request not successful: {(int)response.StatusCode} ({response.ReasonPhrase}).");
 
                 var contentString = await response.Content.ReadAsStringAsync();
 
-                _logger.LogInformation("Open-Meteo Response: " + response);
+                //_logger.LogInformation("YPEN Response: " + response);
                 return Deserialize<TResponse>(contentString);
             }
             catch (TaskCanceledException ex)
@@ -67,11 +67,11 @@ namespace ForecastService
             catch (JsonException ex)
             {
                 var error = JsonSerializer.Deserialize<ErrorStatus>(content);
-                if (error != null)
+                if (error != null && !string.IsNullOrWhiteSpace(error.Error.Text))
                 {
-                    throw new Exception($"Pollinator returned error with code ({error.Error}): {error.ErrorDescription}");
+                    throw new Exception($"Pollinator returned error with code ({error.Error.ExceptionCode}): {error.Error.Text}");
                 }
-                throw new JsonException("Pollinator failed to deserialize the response content with error: " + ex.Message);
+                throw new JsonException("Pollinator failed to deserialize the response with error: " + ex.Message);
             }
         }
     }

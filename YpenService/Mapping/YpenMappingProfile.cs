@@ -8,6 +8,7 @@ using System.Text;
 using YpenService.Models.Pollinator.Persistence;
 using YpenService.Models.Ypen;
 
+
 namespace YpenService.Mapping
 {
     public class YpenMappingProfile : Profile
@@ -22,8 +23,9 @@ namespace YpenService.Mapping
                 {
                     KALCODE = f.properties.KALCODE.Remove(2),
                     Name = f.properties.EDRA,
-                    Latitude = f.properties.LAT,
-                    Longitude = f.properties.LON
+                    Region = "Π.Ε. " + f.properties.PE_ENOTHTA,
+                    Latitude = Math.Round(f.properties.LAT, 3),
+                    Longitude = Math.Round(f.properties.LON, 3)
                 })
                 .ToList());
 
@@ -32,6 +34,7 @@ namespace YpenService.Mapping
                 Select(f => new RegionUnitsDto
                 {
                     KALCODE = f.properties.KALCODE,
+                    //regionCheck = f.properties.LEKTIKO,   //test
                     area = f.properties.AREA_km2,
                     shape = CoordinatesToGeometry(f.geometry)
                 })
@@ -39,6 +42,7 @@ namespace YpenService.Mapping
 
             CreateMap<RegionUnitsDto, RegionUnits>()
                 .ForMember(dest => dest.unit_KALCODE, opt => opt.MapFrom(src => src.KALCODE))
+                //.ForMember(dest => dest.unit_NameCheck, opt => opt.MapFrom(src => src.regionCheck))   //region-center validity check
                 .ForMember(dest => dest.unit_Name, opt => opt.MapFrom(src => src.Region))
                 .ForMember(dest => dest.unit_Center, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.unit_Latitude, opt => opt.MapFrom(src => src.Latitude))
@@ -50,7 +54,7 @@ namespace YpenService.Mapping
         private Geometry? CoordinatesToGeometry(UnitsGeometry geometry)
         {
             var factory = new GeometryFactory();
-            const int decimalPlaces = 2;        //IMPORTANT! rounding coordinates' decimal points
+            const int decimalPlaces = 3;        //IMPORTANT! rounding coordinates' decimal points
 
             if (geometry.type == "MultiPolygon" && geometry.coordinates.Count > 0)
             {

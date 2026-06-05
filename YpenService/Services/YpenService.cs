@@ -82,7 +82,7 @@ namespace YpenService.Services
             }
         }
 
-        public async Task<List<RegionUnitsDto>> PersistUnits(List<RegionCentersDto> centers, List<RegionUnitsDto> units)
+        public async Task<List<RegionUnits>> PersistUnits(List<RegionCentersDto> centers, List<RegionUnitsDto> units)
         {
             string method = "SaveRegionCenters&Units";
             logger.LogInformation("IN Method {method} called", method);
@@ -103,11 +103,11 @@ namespace YpenService.Services
                         {
                             logger.LogWarning($"Method {method} could not find a matching Region Center for KALCODE {unit.KALCODE}");
                         }
-                        return unit;
+                        return mapper.Map<RegionUnits>(unit);
                     })
                     .ToList();
                 logger.LogInformation($"Method {method} finished matching Region Centers to Units");
-                //await unitsRepo.Add(mergedUnits);
+                await unitsRepo.Add(mergedUnits);
                 //logger.LogInformation($"OUT Method {method} deserialized Units object: {mergedUnits}"); //TOO MUCH DATA TO LOG
                 return mergedUnits;
             }

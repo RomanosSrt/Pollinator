@@ -23,12 +23,12 @@ namespace API.Controllers
         }
 
         //[Authorize]
-        [HttpGet("RegionData")]
-        [ProducesResponseType(typeof(ApiResponse<List<RegionUnitsDto>>), StatusCodes.Status200OK)]
+        [HttpGet("SaveRegionData")]
+        [ProducesResponseType(typeof(ApiResponse<List<RegionUnits>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<List<RegionUnitsDto>> GetRegionData()
+        public async Task<List<RegionUnits>> GetRegionData()
         {
             _logger.LogInformation($"Requesting Greek regional unit shapes and centers from YPEN");
             var centers = await _ypenService.GetRegionCenters();
@@ -39,8 +39,34 @@ namespace API.Controllers
                 _logger.LogError($"Failed to retrieve region centers from YPEN: {error}");
                 throw new Exception(error);
             }
-            //var persistResp = await _ypenService.PersistUnits(centers.Response!, units.Response!);
+            var persistResp = await _ypenService.PersistUnits(centers.Response!, units.Response!);
+            return persistResp;
+        }
+
+        //[Authorize]
+        [HttpGet("RegionUnitsData")]
+        [ProducesResponseType(typeof(ApiResponse<List<RegionUnitsDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<List<RegionUnitsDto>?> GetRegionUnitsData()
+        {
+            _logger.LogInformation($"Requesting Greek regional unit shapes and centers from YPEN");
+            var units = await _ypenService.GetRegionUnits();
             return units.Response;
+        }
+
+        //[Authorize]
+        [HttpGet("RegionCentersData")]
+        [ProducesResponseType(typeof(ApiResponse<List<RegionCentersDto>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<List<RegionCentersDto>?> GetRegionCentersData()
+        {
+            _logger.LogInformation($"Requesting Greek regional unit shapes and centers from YPEN");
+            var centers = await _ypenService.GetRegionCenters();
+            return centers.Response;
         }
     }
 }

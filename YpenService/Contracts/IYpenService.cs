@@ -11,6 +11,6 @@ namespace YpenService.Contracts
     {
         Task<ServiceResponse<List<RegionUnitsDto>>> GetRegionUnits();
         Task<ServiceResponse<List<RegionCentersDto>>> GetRegionCenters();
-        Task<List<RegionUnitsDto>> PersistUnits(List<RegionCentersDto> centers, List<RegionUnitsDto> units);
+        Task<List<RegionUnits>> PersistUnits(List<RegionCentersDto> centers, List<RegionUnitsDto> units);
     }
 }

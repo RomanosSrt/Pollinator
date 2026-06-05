@@ -1,4 +1,4 @@
-﻿# 🐝 Thesis Project Brief: Apiary Placement Decision-Support Platform
+﻿# 🐝 Thesis Project Brief: "Pollinator" - Apiary Placement Decision-Support Platform
 
 ---
 
@@ -8,10 +8,10 @@
 |-----------|--------|
 | **Thesis Title** | Web-Based Geospatial System for Optimal Apiary Placement Using Real-Time Pollen Data |
 | **Core Purpose** | A decision-support tool that shows beekeepers regional pollen, air-quality, and weather conditions across Greece to help them choose where (and when) to place hives |
-| **Primary User** | Beekeepers only (no farmer role, no booking) |
+| **Primary User** | Beekeepers |
 | **Geographic Unit** | **74 regional units** of Greece (NUTS3 level), nationwide |
-| **Health-Informatics Basis** | Pollen indices + air-quality indices presented at region level (approved by supervisor as the health-involving component) |
-| **Thesis Emphasis** | Geospatial integration, PostGIS querying, a scheduled data-ingestion pipeline (caching), and explainable scoring — no ML, no black box |
+| **Health-Informatics Basis** | Pollen indices + air-quality indices presented at region level |
+| **Thesis Emphasis** | Geospatial integration, PostGIS querying, a scheduled data-ingestion pipeline (caching), and explainable scoring |
 
 ---
 
@@ -50,7 +50,7 @@
 ### Storage (conceptual)
 ```
 PostgreSQL + PostGIS (Docker-local)
-├── users                  : beekeeper profiles (already built)
+├── users                  : beekeeper profiles
 ├── regions                : region_id, name, geom (POLYGON/MULTIPOLYGON), rep_point (POINT)
 ├── region_air_conditions  : region_id (PK), pollen + pollutant snapshot, fetched_at
 │                            → ~74 rows, one per region, OVERWRITTEN daily
@@ -81,7 +81,7 @@ PostgreSQL + PostGIS (Docker-local)
 | `weather_code` | WMO code → icon + one-word condition |
 | `precipitation_probability_max` (or `precipitation_sum`) | Rain suppresses foraging |
 | `wind_speed_10m_max` | High wind grounds bees |
-| `uv_index_max` *(optional)* | Minor relevance |
+| `uv_index_max` | Minor relevance |
 
 ### Required API Endpoints (REST)
 ```
@@ -116,7 +116,7 @@ suitability(region, day) =
 
 ---
 
-## 🧩 System Components (Mermaid)
+## 🧩 System Components
 
 ```mermaid
 flowchart LR
@@ -155,7 +155,7 @@ flowchart LR
 
 ---
 
-## 🔄 Sequence: Daily Ingestion vs. User Request (Mermaid)
+## 🔄 Sequence: Daily Ingestion vs. User Request
 
 ```mermaid
 sequenceDiagram
@@ -192,11 +192,11 @@ sequenceDiagram
 
 ## 🖥️ Pages & UX
 
-### 1. Register / Login *(already built)*
+### 1. Register / Login 
 Beekeeper-only auth (JWT). On success → Map page.
 **Actions:** submit credentials.
 
-### 2. Map Page *(the heart of the app)*
+### 2. Map Page 
 Full-screen Greece map (Leaflet + OpenStreetMap). The 74 regional units drawn as colored polygons (a **choropleth** — regions shaded by a value).
 - **Metric toggle:** Air quality / Pollen / Temperature → recolors all regions (one state variable swaps which field the style function reads).
 - **Legend:** explains the current metric's color bands (e.g. European AQI good→very-poor). Required for explainability.
@@ -205,7 +205,7 @@ Full-screen Greece map (Leaflet + OpenStreetMap). The 74 regional units drawn as
 
 > **Implementation note:** all 74 polygons render at once and stay colored — coloring is **not** tied to map pan/zoom. Interaction is by **click**, not by moving the map. Avoid per-region images/effects (complexity with no added value); use a WMO weather icon inside the detail/popup instead.
 
-### 3. Region Detail *(side panel or Leaflet popup)*
+### 3. Region Detail 
 Shows the selected region's cached data:
 - **Pollen:** per type, or "not in season."
 - **Air quality:** European AQI (headline) + PM2.5 / PM10.
@@ -213,9 +213,6 @@ Shows the selected region's cached data:
 - **Suitability score:** total + component breakdown (transparent).
 **Actions:** read; (optional) save to shortlist.
 
-### 4. My Shortlist *(optional)*
-A simple list of saved regions. One join table (`user_id`, `region_id`), no status machine, no scheduling.
-**Actions:** view saved regions, remove a region.
 
 ---
 
@@ -229,15 +226,3 @@ A simple list of saved regions. One join table (`user_id`, `region_id`), no stat
 | **Reliability** | If the daily job fails, last good cache is still served (`fetched_at` proves freshness) |
 | **Maintainability** | Clean layers; documented spatial queries; explainable scoring |
 | **Academic Integrity** | All logic traceable; no black-box ML; scientific citations (Odoux et al., 2009); Open-Meteo / CAMS attribution required |
-
----
-
-## ⚙️ Build Order (Suggested)
-
-1. Import 74 region polygons → `regions`; compute `rep_point` via `ST_PointOnSurface`.
-2. `GET /regions` → render colored map (start with one metric).
-3. Daily `BackgroundService`: loop regions → call Open-Meteo → upsert cache tables.
-4. `GET /regions/{id}` → region detail panel.
-5. Metric toggle + legend + day selector.
-6. Suitability score (with component breakdown).
-7. *(Optional)* shortlist.

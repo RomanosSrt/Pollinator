@@ -118,13 +118,13 @@ namespace API.Application.Services.System
             });*/
             #endregion
 
-            #region response optimization
-            services.AddResponseCompression(opts =>
-            {
-                opts.Providers.Add<GzipCompressionProvider>();  //compress response for big byte streams automatical decompression from browser
-            });
-            services.AddMemoryCache();      //use cache instead of hitting the database for every request
-            #endregion
+            //#region response optimization
+            //services.AddResponseCompression(opts =>
+            //{
+            //    opts.Providers.Add<GzipCompressionProvider>();  //compress response for big byte streams automatical decompression from browser
+            //});
+            //services.AddMemoryCache();      //use cache instead of hitting the database for every request
+            //#endregion
         }
     }
 }

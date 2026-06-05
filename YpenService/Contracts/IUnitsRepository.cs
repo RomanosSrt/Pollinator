@@ -7,6 +7,6 @@ namespace YpenService.Contracts
 {
     public interface IUnitsRepository
     {
-        Task<List<RegionUnitsDto>> Add(List<RegionUnitsDto> units);
+        Task<List<RegionUnits>> Add(List<RegionUnits> units);
     }
 }

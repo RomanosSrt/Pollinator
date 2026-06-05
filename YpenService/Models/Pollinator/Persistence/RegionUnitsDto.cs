@@ -10,6 +10,7 @@ namespace YpenService.Models.Pollinator.Persistence
     {
         public Geometry shape { get; set; } 
         public double area { get; set; }
+        //public string regionCheck { get; set; }
 
     }
 }

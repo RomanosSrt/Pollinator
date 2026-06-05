@@ -11,12 +11,12 @@ namespace YpenService.Helpers
         YpenDbContext dbCont, 
         IMapper mapper) : IUnitsRepository
     {
-        public async Task<List<RegionUnitsDto>> Add(List<RegionUnitsDto> units)
+        public async Task<List<RegionUnits>> Add(List<RegionUnits> units)
         {
             logger.LogInformation("Adding the {UnitCount} Greek region units to DB", units.Count);
             foreach (var unit in units)
             {
-                dbCont.RegionUnits.Add(mapper.Map<RegionUnits>(unit));
+                dbCont.RegionUnits.Add(unit);
             }
             await dbCont.SaveChangesAsync();
             return units;

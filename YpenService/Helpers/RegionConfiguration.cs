@@ -7,9 +7,9 @@ using YpenService.Models.Pollinator.Persistence;
 
 namespace YpenService.Helpers
 {
-    public class RegionConfiguration : IEntityTypeConfiguration<RegionUnits>
+    public class RegionConfiguration : IEntityTypeConfiguration<RegionUnit>
     {
-        public void Configure(EntityTypeBuilder<RegionUnits> builder) {
+        public void Configure(EntityTypeBuilder<RegionUnit> builder) {
             builder.HasKey(r => r.unit_KALCODE);
 
             builder.Property(r => r.unit_KALCODE)

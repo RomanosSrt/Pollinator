@@ -7,7 +7,7 @@ namespace YpenService.Helpers
 {
     public class YpenDbContext(DbContextOptions<YpenDbContext> options) : DbContext(options)
     {
-        public required DbSet<RegionUnits> RegionUnits { get; set; }
+        public required DbSet<RegionUnit> RegionUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

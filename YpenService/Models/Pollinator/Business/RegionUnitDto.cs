@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using YpenService.Models.Ypen;
 
-namespace YpenService.Models.Pollinator.Persistence
+namespace YpenService.Models.Pollinator.Business
 {
-    public class RegionUnitsDto : RegionCentersDto
+    public class RegionUnitDto : RegionCenterDto
     {
         public Geometry shape { get; set; } 
         public double area { get; set; }

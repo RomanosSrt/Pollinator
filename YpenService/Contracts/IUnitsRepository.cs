@@ -7,6 +7,18 @@ namespace YpenService.Contracts
 {
     public interface IUnitsRepository
     {
-        Task<List<RegionUnits>> Add(List<RegionUnits> units);
+        #region Units Repositories
+        Task<List<RegionUnit>> GetUnitsAsync();
+        Task<RegionUnit> GetUnitAsync(string KALCODE);
+        #endregion
+
+        #region Centers Repositories
+        Task<List<RegionCenter>> GetCentersAsync();
+        Task<RegionCenter> GetCenterAsync(string KALCODE);
+        #endregion
+
+        #region Init Repository
+        Task<List<RegionUnit>> AddRegionsAsync(List<RegionUnit> units);
+        #endregion
     }
 }

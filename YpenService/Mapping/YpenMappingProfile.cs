@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using YpenService.Models.Pollinator.Business;
 using YpenService.Models.Pollinator.Persistence;
 using YpenService.Models.Ypen;
 
@@ -15,11 +16,11 @@ namespace YpenService.Mapping
     {
         public YpenMappingProfile() 
         { 
-            var centers = new List<RegionCentersDto>();
+            var centers = new List<RegionCenterDto>();
 
-            CreateMap<RegionCentersResponse, List<RegionCentersDto>>()
+            CreateMap<RegionCentersResponse, List<RegionCenterDto>>()
                 .ConvertUsing(src => src.features.
-                Select(f => new RegionCentersDto 
+                Select(f => new RegionCenterDto 
                 {
                     KALCODE = f.properties.KALCODE.Remove(2),
                     Name = f.properties.EDRA,
@@ -29,9 +30,9 @@ namespace YpenService.Mapping
                 })
                 .ToList());
 
-            CreateMap<RegionUnitsResponse, List<RegionUnitsDto>>()
+            CreateMap<RegionUnitsResponse, List<RegionUnitDto>>()
                 .ConvertUsing(src => src.features.
-                Select(f => new RegionUnitsDto
+                Select(f => new RegionUnitDto
                 {
                     KALCODE = f.properties.KALCODE,
                     //regionCheck = f.properties.LEKTIKO,   //test
@@ -40,7 +41,7 @@ namespace YpenService.Mapping
                 })
                 .ToList());
 
-            CreateMap<RegionUnitsDto, RegionUnits>()
+            CreateMap<RegionUnitDto, RegionUnit>()
                 .ForMember(dest => dest.unit_KALCODE, opt => opt.MapFrom(src => src.KALCODE))
                 //.ForMember(dest => dest.unit_NameCheck, opt => opt.MapFrom(src => src.regionCheck))   //region-center validity check
                 .ForMember(dest => dest.unit_Name, opt => opt.MapFrom(src => src.Region))
@@ -48,7 +49,22 @@ namespace YpenService.Mapping
                 .ForMember(dest => dest.unit_Latitude, opt => opt.MapFrom(src => src.Latitude))
                 .ForMember(dest => dest.unit_Longitude, opt => opt.MapFrom(src => src.Longitude))
                 .ForMember(dest => dest.unit_Shapes, opt => opt.MapFrom(src => src.shape))
-                .ForMember(dest => dest.unit_Area, opt => opt.MapFrom(src => src.area));
+                .ForMember(dest => dest.unit_Area, opt => opt.MapFrom(src => src.area))
+                .ReverseMap();
+
+            CreateMap<RegionUnit, RegionCenter>()
+                .ForMember(dest => dest.KALCODE, opt => opt.MapFrom(src => src.unit_KALCODE))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.unit_Center))
+                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.unit_Name))
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.unit_Latitude))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.unit_Longitude));
+
+            CreateMap<RegionCenter, RegionCenterDto>()
+                .ForMember(dest => dest.KALCODE, opt => opt.MapFrom(src => src.KALCODE))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Region))
+                .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
+                .ForMember(dest => dest.Longitude, opt => opt.MapFrom(src => src.Longitude));
 
         }
         private Geometry? CoordinatesToGeometry(UnitsGeometry geometry)

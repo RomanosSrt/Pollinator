@@ -5,7 +5,7 @@ using System.Text;
 
 namespace YpenService.Models.Pollinator.Persistence
 {
-    public class RegionUnits
+    public class RegionUnit
     {
         public string unit_KALCODE { get; set; } = string.Empty;
         public string unit_Center { get; set; } = string.Empty;

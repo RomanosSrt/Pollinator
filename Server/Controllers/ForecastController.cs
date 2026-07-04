@@ -22,14 +22,14 @@ namespace API.Controllers
 
         //[Authorize]
         [HttpGet("PollenIndexes")]
-        [ProducesResponseType(typeof(ApiResponse<ServiceResponse<PollenIndexesResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<ServiceResponse<AirQualityResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<ServiceResponse<PollenIndexesResponse>> GetPollenIndees([FromQuery] PollenIndexesParams pollenParams)
+        public async Task<ServiceResponse<AirQualityResponse>> Load3DForecast([FromQuery] PollenIndexesParams pollenParams)
         {
             _logger.LogInformation($"Requesting pollen indexes using parameters: {pollenParams}");
-            var pollenData = await _forecastService.Get3DPollenIndexes(pollenParams);
+            var pollenData = await _forecastService.Get3DForecast(pollenParams);
             return pollenData;
         }
     }

@@ -2,7 +2,7 @@
 using ForecastService.Models.Pollinator.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using YpenService.Services;
 
 namespace ForecastService.Services
 {
@@ -13,6 +13,7 @@ namespace ForecastService.Services
             services.AddHttpClient<IForecastClient, ForecastClient>();
             services.AddScoped<IForecastDataService, ForecastDataService>();
             services.Configure<OpenMeteoSettings>(config.GetSection("OpenMeteoSettings"));
+            services.AddForecastPersistenceServices(config.GetConnectionString("DefaultConnection") ?? throw new Exception("Error on Forecast system configuration, connection string missing"));
         }
     }
 }

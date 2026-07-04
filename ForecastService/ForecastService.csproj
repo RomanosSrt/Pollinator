@@ -8,13 +8,17 @@
 
   <ItemGroup>
     <Folder Include="Mapping\" />
-    <Folder Include="Helpers\" />
+    <Folder Include="Models\Pollinator\DTOs\" />
+    <Folder Include="Models\Pollinator\DAOs\" />
   </ItemGroup>
 	
   <ItemGroup>
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+	<PackageReference Include="AutoMapper" Version="16.1.1" />
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0" />
   </ItemGroup>
 
 </Project>

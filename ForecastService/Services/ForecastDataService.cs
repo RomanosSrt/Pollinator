@@ -21,16 +21,17 @@ namespace ForecastService.Services
     {
         private readonly OpenMeteoSettings _openMeteoSettings = openMeteoSettings.Value;
 
-        public async Task<ServiceResponse<PollenIndexesResponse>> Get3DPollenIndexes(PollenIndexesParams queryParams)
+        #region External
+        public async Task<ServiceResponse<AirQualityResponse>> Get3DForecast(PollenIndexesParams queryParams)
         {
-            string method = "Get3DPollenIndexes";
+            string method = "Get3DForecast";
             _logger.LogInformation("IN Method {method} called with parameters: {parameters}", method, queryParams);
             try
             {
                 var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.PollenBaseUrl);
-                var resp = await client.GetAsync<PollenIndexesResponse>(requestUri);
+                var resp = await client.GetAsync<AirQualityResponse>(requestUri);
                 _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
-                return new ServiceResponse<PollenIndexesResponse>(resp);
+                return new ServiceResponse<AirQualityResponse>(resp);
             }
             catch (Exception ex)
             {
@@ -48,7 +49,7 @@ namespace ForecastService.Services
             foreach (var property in typeof(TRequest).GetProperties())
             {
                 var value = property.GetValue(queryParams);
-                if (value == null)
+                if (value is null)
                     continue;
                 var jsonAttr = property.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name ?? property.Name;
                 if (value is System.Collections.IEnumerable enumerable)
@@ -66,5 +67,6 @@ namespace ForecastService.Services
 
             return url + query.Value.TrimStart('?');
         }
+        #endregion
     }
 }

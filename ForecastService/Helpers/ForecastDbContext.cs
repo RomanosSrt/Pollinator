@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using YpenService.Models.Pollinator.Persistence;
 
 namespace YpenService.Helpers
 {
-    public class YpenDbContext(DbContextOptions<YpenDbContext> options) : DbContext(options)
+    public class ForecastDbContext(DbContextOptions<ForecastDbContext> options) : DbContext(options)
     {
-        public required DbSet<RegionUnit> RegionUnits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -16,7 +14,7 @@ namespace YpenService.Helpers
         public static void EnsureDatabaseCreated(IServiceProvider services)
         {
             using var serviceScope = services.CreateScope();
-            var context = serviceScope.ServiceProvider.GetRequiredService<YpenDbContext>();
+            var context = serviceScope.ServiceProvider.GetRequiredService<ForecastDbContext>();
             context.Database.EnsureCreated();
         }
     }

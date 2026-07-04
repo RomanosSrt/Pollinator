@@ -15,7 +15,6 @@ namespace YpenService.Services
     public class YpenService(
         ILogger<YpenService> logger,
         IOptions<YpenSettings> settings,
-        IOptions<DBSettings> dbSettings,
         IYpenClient client,
         IUnitsRepository repo,
         IMapper mapper,

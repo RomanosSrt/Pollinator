@@ -16,12 +16,13 @@ namespace ForecastService.Models.Pollinator.QueryParams
         public List<float> Longtitudes { get; set; } = new List<float>();
         [JsonPropertyName("hourly")]
         public List<PollenType> HourlyPollenTypes { get; set; } = new List<PollenType>();
-        [JsonPropertyName("current")]
-        public List<PollenType> CurrentPollenTypes { get; set; } = new List<PollenType>();
-        [Required]
+        [JsonPropertyName("hourly")]
+        public List<AirQualityParams> HourlyAirQualityParams { get; set; } = new List<AirQualityParams>();
+        //[JsonPropertyName("current")]
+        //public List<PollenType> CurrentPollenTypes { get; set; } = new List<PollenType>();
         [JsonPropertyName("forecast_days")]
-        public int ForecastPeriod { get; set; } = 3;
-        
+        public int ForecastPeriod { get; set; } = 5;
+
         //[Required]
         //[JsonPropertyName("timezone")]
         //public string Timezone { get; set; } = "auto";

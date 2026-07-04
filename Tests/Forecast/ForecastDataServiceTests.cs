@@ -37,7 +37,7 @@ namespace Tests.Forecast
         };
 
         // A realistic API response object.
-        private static PollenIndexesResponse SampleResponse() => new()
+        private static AirQualityResponse SampleResponse() => new()
         {
             latitude = 37.98,
             longitude = 23.73,
@@ -64,11 +64,11 @@ namespace Tests.Forecast
 
             // Tell the mock: whenever GetAsync is called with ANY string → return SampleResponse
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            var result = await sut.Get3DPollenIndexes(ValidParams());
+            var result = await sut.Get3DForecast(ValidParams());
 
             // Assert
             Assert.True(result.IsSuccess);                        // no error message was set
@@ -83,15 +83,15 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.Get3DPollenIndexes(ValidParams());
+            await sut.Get3DForecast(ValidParams());
 
             // Assert — Moq lets you verify a mock was called a specific number of times
             clientMock.Verify(
-                c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()),
+                c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()),
                 Times.Once);
         }
 
@@ -103,12 +103,12 @@ namespace Tests.Forecast
 
             // Tell the mock: throw an HttpRequestException instead of returning data
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .ThrowsAsync(new HttpRequestException("Service unavailable"));
 
             // Act + Assert — Assert.ThrowsAsync verifies the expected exception is thrown
             await Assert.ThrowsAsync<HttpRequestException>(
-                () => sut.Get3DPollenIndexes(ValidParams()));
+                () => sut.Get3DForecast(ValidParams()));
         }
 
         [Fact]
@@ -119,12 +119,12 @@ namespace Tests.Forecast
             string? capturedUrl = null;
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)   // intercept the argument
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.Get3DPollenIndexes(ValidParams());
+            await sut.Get3DForecast(ValidParams());
 
             // Assert — the URL must carry the latitude we passed in
             Assert.NotNull(capturedUrl);
@@ -138,11 +138,11 @@ namespace Tests.Forecast
             string? capturedUrl = null;
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DPollenIndexes(ValidParams());
+            await sut.Get3DForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("23.73", capturedUrl);
@@ -155,11 +155,11 @@ namespace Tests.Forecast
             string? capturedUrl = null;
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DPollenIndexes(ValidParams());
+            await sut.Get3DForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("olive_pollen", capturedUrl);
@@ -173,11 +173,11 @@ namespace Tests.Forecast
             string? capturedUrl = null;
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DPollenIndexes(ValidParams());
+            await sut.Get3DForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.StartsWith("https://air-quality-api.open-meteo.com", capturedUrl);
@@ -198,11 +198,11 @@ namespace Tests.Forecast
             };
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DPollenIndexes(allTypesParams);
+            await sut.Get3DForecast(allTypesParams);
 
             // Every pollen type must be present in the query string
             foreach (var pollenType in Enum.GetValues<PollenType>())
@@ -231,11 +231,11 @@ namespace Tests.Forecast
             };
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DPollenIndexes(parameters);
+            await sut.Get3DForecast(parameters);
 
             Assert.Contains(forecastDays.ToString(), capturedUrl);
         }
@@ -259,11 +259,11 @@ namespace Tests.Forecast
             };
 
             clientMock
-                .Setup(c => c.GetAsync<PollenIndexesResponse>(It.IsAny<string>()))
+                .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DPollenIndexes(parameters);
+            await sut.Get3DForecast(parameters);
 
             Assert.Contains(lat.ToString(), capturedUrl);
             Assert.Contains(lon.ToString(), capturedUrl);

@@ -8,7 +8,7 @@ namespace YpenService.Helpers
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new RegionConfiguration());
+            //builder.ApplyConfiguration(new RegionConfiguration());
             base.OnModelCreating(builder);
         }
         public static void EnsureDatabaseCreated(IServiceProvider services)

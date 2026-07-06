@@ -9,13 +9,7 @@ namespace ForecastService.Contracts
 {
     public interface IForecastDataService
     {
-        #region Pollen
-        //Task<T> Get
-        #endregion
-
-        #region External 
-        Task<ServiceResponse<AirQualityResponse>> Get3DForecast(PollenIndexesParams queryParams);
-
-        #endregion
+        Task<ServiceResponse<AirQualityResponse>> Get5DAirQualForecast(PollenIndexesParams queryParams);
+        Task<ServiceResponse<WeatherForecastResponse>> Get5DWeatherForecast(WeatherParams queryParams);
     }
 }

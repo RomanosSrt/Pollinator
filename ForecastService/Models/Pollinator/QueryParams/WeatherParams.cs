@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace ForecastService.Models.Pollinator.QueryParams
 {
-    public class PollenIndexesParams
+    public class WeatherParams
     {
         [Required]
         [JsonPropertyName("latitude")]
@@ -14,10 +14,8 @@ namespace ForecastService.Models.Pollinator.QueryParams
         [Required]
         [JsonPropertyName("longitude")]
         public List<float> Longtitudes { get; set; } = new List<float>();
-        [JsonPropertyName("hourly")]
-        public List<AirQualityParams> HourlyAirParams { get; set; } = new List<AirQualityParams>();
-        //[JsonPropertyName("current")]
-        //public List<PollenType> CurrentPollenTypes { get; set; } = new List<PollenType>();
+        [JsonPropertyName("daily")]
+        public List<WeatherIndicator> DailyWeatherIndicators { get; set; } = new List<WeatherIndicator>();
         //[JsonPropertyName("forecast_days")]
         //public int ForecastPeriod { get; set; } = 5;
     }

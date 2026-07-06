@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ForecastService.Models.OpenMeteo.Responses
+﻿namespace ForecastService.Models.OpenMeteo.Responses
 {
     public class WeatherForecastResponse
     {
@@ -10,11 +6,11 @@ namespace ForecastService.Models.OpenMeteo.Responses
         public double longitude { get; set; }
         public double generationtime_ms { get; set; }
         public int utc_offset_seconds { get; set; }
-        public string timezone { get; set; } = string.Empty;
-        public string timezone_abbreviation { get; set; } = string.Empty;
-        public int elevation { get; set; }
-        public HourlyUnits hourly_units { get; set; } = new();
-        public Hourly hourly { get; set; } = new();
+        public string timezone { get; set; }
+        public string timezone_abbreviation { get; set; }
+        public double elevation { get; set; }
+        public DailyUnits daily_units { get; set; }
+        public Daily daily { get; set; }
         public int? location_id { get; set; }
     }
 }

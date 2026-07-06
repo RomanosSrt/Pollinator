@@ -17,7 +17,7 @@ namespace Tests.Forecast
 
             var settings = Options.Create(new OpenMeteoSettings
             {
-                PollenBaseUrl = "https://air-quality-api.open-meteo.com/v1/air-quality?"
+                AirQualityBaseUrl = "https://air-quality-api.open-meteo.com/v1/air-quality?"
             });
 
             var clientMock = new Mock<IForecastClient>();
@@ -32,8 +32,7 @@ namespace Tests.Forecast
         {
             Latitudes = [37.98f],
             Longtitudes = [23.73f],
-            HourlyPollenTypes = [PollenType.olive_pollen, PollenType.grass_pollen],
-            ForecastPeriod = 3
+            HourlyAirParams = [AirQualityParams.olive_pollen, AirQualityParams.grass_pollen]
         };
 
         // A realistic API response object.
@@ -68,7 +67,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            var result = await sut.Get3DForecast(ValidParams());
+            var result = await sut.Get5DAirQualForecast(ValidParams());
 
             // Assert
             Assert.True(result.IsSuccess);                        // no error message was set
@@ -87,7 +86,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.Get3DForecast(ValidParams());
+            await sut.Get5DAirQualForecast(ValidParams());
 
             // Assert — Moq lets you verify a mock was called a specific number of times
             clientMock.Verify(
@@ -108,7 +107,7 @@ namespace Tests.Forecast
 
             // Act + Assert — Assert.ThrowsAsync verifies the expected exception is thrown
             await Assert.ThrowsAsync<HttpRequestException>(
-                () => sut.Get3DForecast(ValidParams()));
+                () => sut.Get5DAirQualForecast(ValidParams()));
         }
 
         [Fact]
@@ -124,7 +123,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.Get3DForecast(ValidParams());
+            await sut.Get5DAirQualForecast(ValidParams());
 
             // Assert — the URL must carry the latitude we passed in
             Assert.NotNull(capturedUrl);
@@ -142,7 +141,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DForecast(ValidParams());
+            await sut.Get5DAirQualForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("23.73", capturedUrl);
@@ -159,7 +158,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DForecast(ValidParams());
+            await sut.Get5DAirQualForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("olive_pollen", capturedUrl);
@@ -177,7 +176,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DForecast(ValidParams());
+            await sut.Get5DAirQualForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.StartsWith("https://air-quality-api.open-meteo.com", capturedUrl);
@@ -193,8 +192,7 @@ namespace Tests.Forecast
             {
                 Latitudes = [37.98f],
                 Longtitudes = [23.73f],
-                HourlyPollenTypes = Enum.GetValues<PollenType>().ToList(),
-                ForecastPeriod = 3
+                HourlyAirParams = Enum.GetValues<AirQualityParams>().ToList()
             };
 
             clientMock
@@ -202,10 +200,10 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DForecast(allTypesParams);
+            await sut.Get5DAirQualForecast(allTypesParams);
 
             // Every pollen type must be present in the query string
-            foreach (var pollenType in Enum.GetValues<PollenType>())
+            foreach (var pollenType in Enum.GetValues<AirQualityParams>())
                 Assert.Contains(pollenType.ToString(), capturedUrl);
         }
 
@@ -226,8 +224,7 @@ namespace Tests.Forecast
             {
                 Latitudes = [37.98f],
                 Longtitudes = [23.73f],
-                HourlyPollenTypes = [PollenType.olive_pollen],
-                ForecastPeriod = forecastDays
+                HourlyAirParams = [AirQualityParams.olive_pollen]
             };
 
             clientMock
@@ -235,7 +232,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DForecast(parameters);
+            await sut.Get5DAirQualForecast(parameters);
 
             Assert.Contains(forecastDays.ToString(), capturedUrl);
         }
@@ -254,8 +251,7 @@ namespace Tests.Forecast
             {
                 Latitudes = [lat],
                 Longtitudes = [lon],
-                HourlyPollenTypes = [PollenType.olive_pollen],
-                ForecastPeriod = 3
+                HourlyAirParams = [AirQualityParams.olive_pollen]
             };
 
             clientMock
@@ -263,7 +259,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get3DForecast(parameters);
+            await sut.Get5DAirQualForecast(parameters);
 
             Assert.Contains(lat.ToString(), capturedUrl);
             Assert.Contains(lon.ToString(), capturedUrl);

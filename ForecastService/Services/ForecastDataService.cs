@@ -21,17 +21,34 @@ namespace ForecastService.Services
     {
         private readonly OpenMeteoSettings _openMeteoSettings = openMeteoSettings.Value;
 
-        #region External
-        public async Task<ServiceResponse<AirQualityResponse>> Get3DForecast(PollenIndexesParams queryParams)
+        public async Task<ServiceResponse<AirQualityResponse>> Get5DAirQualForecast(PollenIndexesParams queryParams)
         {
-            string method = "Get3DForecast";
+            string method = "Get5DAirQualForecast";
             _logger.LogInformation("IN Method {method} called with parameters: {parameters}", method, queryParams);
             try
             {
-                var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.PollenBaseUrl);
+                var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.AirQualityBaseUrl);
                 var resp = await client.GetAsync<AirQualityResponse>(requestUri);
                 _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
                 return new ServiceResponse<AirQualityResponse>(resp);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"ERROR Method {method} failed with exception: {ex?.Message ?? "Unknown exception!"}");
+                throw;
+            }
+        }
+
+        public async Task<ServiceResponse<WeatherForecastResponse>> Get5DWeatherForecast(WeatherParams queryParams)
+        {
+            string method = "Get5DWeatherForecast";
+            _logger.LogInformation("IN Method {method} called with parameters: {parameters}", method, queryParams);
+            try
+            {
+                var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.WeatherBaseUrl);
+                var resp = await client.GetAsync<WeatherForecastResponse>(requestUri);
+                _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
+                return new ServiceResponse<WeatherForecastResponse>(resp);
             }
             catch (Exception ex)
             {
@@ -67,6 +84,5 @@ namespace ForecastService.Services
 
             return url + query.Value.TrimStart('?');
         }
-        #endregion
     }
 }

@@ -11,5 +11,11 @@ namespace ForecastService.Models.Pollinator.QueryParams
         european_aqi,
         ozone,
         nitrogen_dioxide,
+        alder_pollen,
+        birch_pollen,
+        grass_pollen,
+        mugwort_pollen,
+        olive_pollen,
+        ragweed_pollen
     }
 }

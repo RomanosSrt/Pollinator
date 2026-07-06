@@ -21,16 +21,28 @@ namespace API.Controllers
         }
 
         //[Authorize]
-        [HttpGet("PollenIndexes")]
+        [HttpGet("AirQualityIndexes")]
         [ProducesResponseType(typeof(ApiResponse<ServiceResponse<AirQualityResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<ServiceResponse<AirQualityResponse>> Load3DForecast([FromQuery] PollenIndexesParams pollenParams)
+        public async Task<ServiceResponse<AirQualityResponse>> Load5DAirForecast([FromQuery] PollenIndexesParams airParams)
         {
-            _logger.LogInformation($"Requesting pollen indexes using parameters: {pollenParams}");
-            var pollenData = await _forecastService.Get3DForecast(pollenParams);
-            return pollenData;
+            _logger.LogInformation($"Requesting air quality indexes using parameters: {airParams}");
+            var airData = await _forecastService.Get5DAirQualForecast(airParams);
+            return airData;
+        }
+
+        [HttpGet("WeatherIndexes")]
+        [ProducesResponseType(typeof(ApiResponse<ServiceResponse<WeatherForecastResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
+        public async Task<ServiceResponse<WeatherForecastResponse>> Load5DWeatherForecast([FromQuery] WeatherParams weatherParams)
+        {
+            _logger.LogInformation($"Requesting weather indexes using parameters: {weatherParams}");
+            var weatherData = await _forecastService.Get5DWeatherForecast(weatherParams);
+            return weatherData;
         }
     }
 }

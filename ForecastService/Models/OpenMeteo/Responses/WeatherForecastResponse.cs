@@ -1,6 +1,6 @@
 ﻿namespace ForecastService.Models.OpenMeteo.Responses
 {
-    public class WeatherForecastResponse
+    public class WeatherForecastResponse : IOpenMeteoResponse
     {
         public double latitude { get; set; }
         public double longitude { get; set; }

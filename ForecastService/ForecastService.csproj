@@ -5,12 +5,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-    <Folder Include="Models\Pollinator\DTOs\" />
-    <Folder Include="Models\Pollinator\DAOs\" />
-  </ItemGroup>
 	
   <ItemGroup>
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
@@ -19,6 +13,10 @@
 	<PackageReference Include="AutoMapper" Version="16.1.1" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
 	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\YpenService\YpenService.csproj" />
   </ItemGroup>
 
 </Project>

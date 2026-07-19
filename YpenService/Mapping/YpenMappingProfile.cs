@@ -16,8 +16,6 @@ namespace YpenService.Mapping
     {
         public YpenMappingProfile() 
         { 
-            var centers = new List<RegionCenterDto>();
-
             CreateMap<RegionCentersResponse, List<RegionCenterDto>>()
                 .ConvertUsing(src => src.features.
                 Select(f => new RegionCenterDto 

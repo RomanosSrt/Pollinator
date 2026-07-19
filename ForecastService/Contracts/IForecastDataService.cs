@@ -1,5 +1,6 @@
 ﻿using ForecastService.Models.OpenMeteo.Responses;
 using ForecastService.Models.Pollinator;
+using ForecastService.Models.Pollinator.DTOs;
 using ForecastService.Models.Pollinator.QueryParams;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,19 @@ namespace ForecastService.Contracts
 {
     public interface IForecastDataService
     {
-        Task<ServiceResponse<AirQualityResponse>> Get5DAirQualForecast(PollenIndexesParams queryParams);
-        Task<ServiceResponse<WeatherForecastResponse>> Get5DWeatherForecast(WeatherParams queryParams);
+        #region AirQuality Services
+        Task<List<AirQualityDTO>> GetTotalAirQuality4D();
+        Task<AirQualityDTO> GetAirQuality4DById(string kalcode);
+        #endregion
+
+        #region Weather Services
+        Task<List<WeatherDTO>> GetTotalWeather4D();
+        Task<WeatherDTO> GetWeather4DById(string kalcode);
+        #endregion
+
+        #region Init Services
+        Task<ServiceResponse<List<AirQualityResponse>>> Get5DAirQualForecast(PollenIndexesParams queryParams);
+        Task<ServiceResponse<List<WeatherForecastResponse>>> Get5DWeatherForecast(WeatherParams queryParams);
+        #endregion
     }
 }

@@ -1,6 +1,8 @@
 ﻿using ForecastService.Contracts;
 using ForecastService.Models.OpenMeteo.Responses;
 using ForecastService.Models.Pollinator;
+using ForecastService.Models.Pollinator.DAOs;
+using ForecastService.Models.Pollinator.DTOs;
 using ForecastService.Models.Pollinator.QueryParams;
 using ForecastService.Models.Pollinator.Settings;
 using Microsoft.AspNetCore.Http;
@@ -21,16 +23,45 @@ namespace ForecastService.Services
     {
         private readonly OpenMeteoSettings _openMeteoSettings = openMeteoSettings.Value;
 
-        public async Task<ServiceResponse<AirQualityResponse>> Get5DAirQualForecast(PollenIndexesParams queryParams)
+        #region AirQuality Services
+        public Task<List<AirQualityDTO>> GetTotalAirQuality4D()
+        {
+            return null;
+        }
+        public Task<AirQualityDTO> GetAirQuality4DById(string kalcode)
+        {
+            return null;
+        }
+        #endregion
+
+        #region Weather Services
+        public Task<List<WeatherDTO>> GetTotalWeather4D()
+        {
+            return null;
+        }
+        public Task<WeatherDTO> GetWeather4DById(string kalcode)
+        {
+            return null;
+        }
+        #endregion
+
+
+        #region Init services
+        public async Task<ServiceResponse<List<AirQualityResponse>>> Get5DAirQualForecast(PollenIndexesParams queryParams)
         {
             string method = "Get5DAirQualForecast";
             _logger.LogInformation("IN Method {method} called with parameters: {parameters}", method, queryParams);
             try
             {
                 var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.AirQualityBaseUrl);
-                var resp = await client.GetAsync<AirQualityResponse>(requestUri);
+                var resp = await client.GetAsync<List<AirQualityResponse>>(requestUri);
+                if (resp is null)
+                    throw new Exception("Response from the API is null.");
                 _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
-                return new ServiceResponse<AirQualityResponse>(resp);
+                //List<AirQualityDAO> airQualityData = resp
+                    //.GroupBy(x => new { x. })
+                    
+                return new ServiceResponse<List<AirQualityResponse>>(resp);
             }
             catch (Exception ex)
             {
@@ -39,16 +70,16 @@ namespace ForecastService.Services
             }
         }
 
-        public async Task<ServiceResponse<WeatherForecastResponse>> Get5DWeatherForecast(WeatherParams queryParams)
+        public async Task<ServiceResponse<List<WeatherForecastResponse>>> Get5DWeatherForecast(WeatherParams queryParams)
         {
             string method = "Get5DWeatherForecast";
             _logger.LogInformation("IN Method {method} called with parameters: {parameters}", method, queryParams);
             try
             {
                 var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.WeatherBaseUrl);
-                var resp = await client.GetAsync<WeatherForecastResponse>(requestUri);
+                var resp = await client.GetAsync<List<WeatherForecastResponse>>(requestUri);
                 _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
-                return new ServiceResponse<WeatherForecastResponse>(resp);
+                return new ServiceResponse<List<WeatherForecastResponse>>(resp);
             }
             catch (Exception ex)
             {
@@ -84,5 +115,6 @@ namespace ForecastService.Services
 
             return url + query.Value.TrimStart('?');
         }
+        #endregion
     }
 }

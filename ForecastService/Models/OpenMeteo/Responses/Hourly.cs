@@ -19,10 +19,5 @@ namespace ForecastService.Models.OpenMeteo.Responses
         public List<int?>? european_aqi { get; set; } = new();
         public List<double?>? ozone { get; set; } = new();
         public List<double?>? nitrogen_dioxide { get; set; } = new();
-        public List<double?>? temperature_2m { get; set; } = new();
-        public List<double?>? wind_speed_10m { get; set; } = new();
-        public List<int?>? weather_code { get; set; } = new();
-        public List<int?>? precipitation_probability { get; set; } = new();
-        public List<int?>? relative_humidity_2m { get; set; } = new();
     }
 }

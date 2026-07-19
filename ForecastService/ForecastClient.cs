@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using ForecastService.Models.OpenMeteo;
+using ForecastService.Models.OpenMeteo.Responses;
 
 namespace ForecastService
 {
@@ -61,6 +62,9 @@ namespace ForecastService
         {
             try
             {
+                if (content.TrimStart().StartsWith("{") &&
+                    typeof(IOpenMeteoResponse).IsAssignableFrom(typeof(TResponse).GetGenericArguments()[0]))
+                    content = $"[{content}]";
                 var resp = JsonSerializer.Deserialize<TResponse>(content);
                 return resp == null ? throw new JsonException("Pollinator failed to deserialize the response content") : resp;
             }

@@ -6,6 +6,7 @@ namespace ForecastService.Models.Pollinator.QueryParams
 {
     public enum AirQualityParams
     {
+        dust,
         pm10,
         pm2_5,
         european_aqi,

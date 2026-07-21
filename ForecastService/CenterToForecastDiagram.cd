@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ForecastService.Models.Pollinator.DAOs.WeatherDAO">
+    <Position X="9.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAIAAAAAAADAAAAAAAAAAAAAACCAAAAAYA=</HashCode>
+      <FileName>Models\Pollinator\DAOs\WeatherDAO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ForecastService.Models.OpenMeteo.Responses.WeatherForecastResponse">
+    <Position X="6.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ABAAQAAABAAAAACABAAAAIAACAAAAABAAAgAAEAAAAA=</HashCode>
+      <FileName>Models\OpenMeteo\Responses\WeatherForecastResponse.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.419" />
+  </Class>
+  <Class Name="ForecastService.Models.Pollinator.QueryParams.WeatherParams">
+    <Position X="0.5" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Models\Pollinator\QueryParams\WeatherParams.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ForecastService.Models.Pollinator.QueryParams.OpenMeteoParams">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Pollinator\QueryParams\OpenMeteoParams.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ForecastService.Models.Pollinator.DTOs.WeatherDTO">
+    <Position X="12" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAIAAAAAAADAAAAAAAAAAAAAACCAAAAAYA=</HashCode>
+      <FileName>Models\Pollinator\DTOs\WeatherDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="ForecastService.Models.Pollinator.QueryParams.WeatherIndicator">
+    <Position X="0.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAhAAAAIAAAAABgIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Pollinator\QueryParams\WeatherIndicator.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

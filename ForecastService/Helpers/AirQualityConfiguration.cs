@@ -12,12 +12,11 @@ namespace ForecastService.Helpers
     {
         public void Configure(EntityTypeBuilder<AirQualityDAO> builder)
         {
-            builder.ToTable("Weather");
-            builder.HasKey(w => w.Kalcode);
+            builder.ToTable("AirQuality");
+            builder.HasKey(q => new { q.Time, q.Kalcode });
             builder.Property(prop => prop.Time)
                 .IsRequired()
                 .HasColumnName("Time");
-            builder.HasIndex(i => new { i.Time, i.Kalcode });
 
             builder.Property<double?>(prop => prop.Dust)
                 //.HasColumnType("")

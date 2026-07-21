@@ -1,22 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ForecastService.Models.Pollinator.QueryParams
 {
-    public enum AirQualityParams
+    public class AirQualityParams : OpenMeteoParams
     {
-        dust,
-        pm10,
-        pm2_5,
-        european_aqi,
-        ozone,
-        nitrogen_dioxide,
-        alder_pollen,
-        birch_pollen,
-        grass_pollen,
-        mugwort_pollen,
-        olive_pollen,
-        ragweed_pollen
+        [JsonPropertyName("hourly")]
+        public List<AirQualityIndicator> HourlyAirParams { get; set; } = new List<AirQualityIndicator>();
+        //[JsonPropertyName("current")]
+        //public List<PollenType> CurrentPollenTypes { get; set; } = new List<PollenType>();
+        //[JsonPropertyName("forecast_days")]
+        //public int ForecastPeriod { get; set; } = 5;
     }
 }

@@ -6,14 +6,8 @@ using System.Text.Json.Serialization;
 
 namespace ForecastService.Models.Pollinator.QueryParams
 {
-    public class WeatherParams
+    public class WeatherParams : OpenMeteoParams
     {
-        [Required]
-        [JsonPropertyName("latitude")]
-        public List<float> Latitudes { get; set; } = new List<float>();
-        [Required]
-        [JsonPropertyName("longitude")]
-        public List<float> Longtitudes { get; set; } = new List<float>();
         [JsonPropertyName("daily")]
         public List<WeatherIndicator> DailyWeatherIndicators { get; set; } = new List<WeatherIndicator>();
         //[JsonPropertyName("forecast_days")]

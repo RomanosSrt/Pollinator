@@ -21,8 +21,8 @@ namespace ForecastService.Contracts
         #endregion
 
         #region Init Services
-        Task<ServiceResponse<List<AirQualityResponse>>> Get5DAirQualForecast(PollenIndexesParams queryParams);
-        Task<ServiceResponse<List<WeatherForecastResponse>>> Get5DWeatherForecast(WeatherParams queryParams);
+        Task<ServiceResponse<List<AirQualityResponse>>> Get5DAirQualForecast(AirQualityParams queryParams);
+        Task<ServiceResponse<List<WeatherDTO>>> Get5DWeatherForecast(List<WeatherIndicator> indexes);
         #endregion
     }
 }

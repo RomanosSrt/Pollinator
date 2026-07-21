@@ -70,11 +70,11 @@ namespace ForecastService.Helpers
             await using var transaction = await dbCont.Database.BeginTransactionAsync();
             try
             {
-                var delete = dbCont.AirQuality.ExecuteDeleteAsync();
+                await dbCont.AirQuality.ExecuteDeleteAsync();
                 dbCont.AirQuality.AddRange(airQualityData);
                 var save = dbCont.SaveChangesAsync();
                 var commit = transaction.CommitAsync();
-                await Task.WhenAll(delete, save, commit);
+                await Task.WhenAll(save, commit);
             }
             catch
             {
@@ -94,11 +94,10 @@ namespace ForecastService.Helpers
             await using var transaction = await dbCont.Database.BeginTransactionAsync();
             try
             {
-                var delete = dbCont.AirQuality.ExecuteDeleteAsync();
+                await dbCont.Weather.ExecuteDeleteAsync();
                 dbCont.Weather.AddRange(weatherData);
-                var save = dbCont.SaveChangesAsync();
-                var commit = transaction.CommitAsync();
-                await Task.WhenAll(delete, save, commit);
+                await dbCont.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch
             {

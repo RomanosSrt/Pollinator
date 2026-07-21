@@ -2,6 +2,7 @@
 using ForecastService.Contracts;
 using ForecastService.Models.OpenMeteo.Responses;
 using ForecastService.Models.Pollinator;
+using ForecastService.Models.Pollinator.DTOs;
 using ForecastService.Models.Pollinator.QueryParams;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +27,7 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<ServiceResponse<List<AirQualityResponse>>> Load5DAirForecast([FromQuery] PollenIndexesParams airParams)
+        public async Task<ServiceResponse<List<AirQualityResponse>>> Load5DAirForecast([FromQuery] AirQualityParams airParams)
         {
             _logger.LogInformation($"Requesting air quality indexes using parameters: {airParams}");
             var airData = await _forecastService.Get5DAirQualForecast(airParams);
@@ -38,10 +39,10 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<ServiceResponse<List<WeatherForecastResponse>>> Load5DWeatherForecast([FromQuery] WeatherParams weatherParams)
+        public async Task<ServiceResponse<List<WeatherDTO>>> Load5DWeatherForecast([FromQuery] List<WeatherIndicator> indexes)
         {
-            _logger.LogInformation($"Requesting weather indexes using parameters: {weatherParams}");
-            var weatherData = await _forecastService.Get5DWeatherForecast(weatherParams);
+            _logger.LogInformation($"Requesting weather indexes using parameters: {indexes}");
+            var weatherData = await _forecastService.Get5DWeatherForecast(indexes);
             return weatherData;
         }
     }

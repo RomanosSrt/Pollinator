@@ -12,31 +12,30 @@ namespace ForecastService.Helpers
     {
         public void Configure(EntityTypeBuilder<WeatherDAO> builder)
         {
-            builder.ToTable("AirQuality");
-            builder.HasKey(w => w.Kalcode);
+            builder.ToTable("Weather");
+            builder.HasKey(w => new { w.Kalcode, w.Time });
             builder.Property(prop => prop.Time)
                 .IsRequired()
                 .HasColumnName("Time");
-            builder.HasIndex(i => new { i.Time, i.Kalcode });
-
+            
             builder.Property<int?>(prop => prop.WmoCode)
                 //.HasColumnType("")
-                .HasColumnName("Dust");
+                .HasColumnName("WmoCode");
             builder.Property<double?>(prop => prop.TemperatureMax)
                 //.HasColumnType("")
-                .HasColumnName("Dust");
+                .HasColumnName("TemperatureMax");
             builder.Property<double?>(prop => prop.TemperatureMin)
                 //.HasColumnType("")
-                .HasColumnName("Dust");
+                .HasColumnName("TemperatureMin");
             builder.Property<double?>(prop => prop.WindSpeed)
                 //.HasColumnType("")
-                .HasColumnName("Dust");
-            builder.Property<double?>(prop => prop.PercipitationPct)
+                .HasColumnName("WindSpeed");
+            builder.Property<double?>(prop => prop.PrecipitationPct)
                 //.HasColumnType("")
-                .HasColumnName("Dust");
+                .HasColumnName("Percipitation");
             builder.Property<double?>(prop => prop.Humidity)
                 //.HasColumnType("")
-                .HasColumnName("Dust");
+                .HasColumnName("Humidity");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ForecastService.Contracts;
+﻿using AutoMapper;
+using ForecastService.Contracts;
 using ForecastService.Models.OpenMeteo.Responses;
 using ForecastService.Models.Pollinator.QueryParams;
 using ForecastService.Models.Pollinator.Settings;
@@ -6,6 +7,7 @@ using ForecastService.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using YpenService.Contracts;
 
 namespace Tests.Forecast
 {
@@ -21,18 +23,21 @@ namespace Tests.Forecast
             });
 
             var clientMock = new Mock<IForecastClient>();
+            var serviceMock = new Mock<IYpenService>();
+            var repoMock = new Mock<IForecastRepository>();
+            var mapperMock = new Mock<IMapper>();
 
-            var sut = new ForecastDataService(loggerMock.Object, settings, clientMock.Object);
+            var sut = new ForecastDataService(loggerMock.Object, settings, clientMock.Object, serviceMock.Object, repoMock.Object, mapperMock.Object);
 
             return (sut, clientMock);
         }
 
-        // A minimal valid PollenIndexesParams used across many tests.
-        private static PollenIndexesParams ValidParams() => new()
+        // A minimal valid AirQualityParams used across many tests.
+        private static AirQualityParams ValidParams() => new()
         {
             Latitudes = [37.98f],
-            Longtitudes = [23.73f],
-            HourlyAirParams = [AirQualityParams.olive_pollen, AirQualityParams.grass_pollen]
+            Longitudes = [23.73f],
+            HourlyAirParams = [AirQualityIndicator.olive_pollen, AirQualityIndicator.grass_pollen]
         };
 
         // A realistic API response object.
@@ -188,11 +193,11 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
             string? capturedUrl = null;
 
-            var allTypesParams = new PollenIndexesParams
+            var allTypesParams = new AirQualityParams
             {
                 Latitudes = [37.98f],
-                Longtitudes = [23.73f],
-                HourlyAirParams = Enum.GetValues<AirQualityParams>().ToList()
+                Longitudes = [23.73f],
+                HourlyAirParams = Enum.GetValues<AirQualityIndicator>().ToList()
             };
 
             clientMock
@@ -203,7 +208,7 @@ namespace Tests.Forecast
             await sut.Get5DAirQualForecast(allTypesParams);
 
             // Every pollen type must be present in the query string
-            foreach (var pollenType in Enum.GetValues<AirQualityParams>())
+            foreach (var pollenType in Enum.GetValues<AirQualityIndicator>())
                 Assert.Contains(pollenType.ToString(), capturedUrl);
         }
 
@@ -220,11 +225,11 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
             string? capturedUrl = null;
 
-            var parameters = new PollenIndexesParams
+            var parameters = new AirQualityParams
             {
                 Latitudes = [37.98f],
-                Longtitudes = [23.73f],
-                HourlyAirParams = [AirQualityParams.olive_pollen]
+                Longitudes = [23.73f],
+                HourlyAirParams = [AirQualityIndicator.olive_pollen]
             };
 
             clientMock
@@ -247,11 +252,11 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
             string? capturedUrl = null;
 
-            var parameters = new PollenIndexesParams
+            var parameters = new AirQualityParams
             {
                 Latitudes = [lat],
-                Longtitudes = [lon],
-                HourlyAirParams = [AirQualityParams.olive_pollen]
+                Longitudes = [lon],
+                HourlyAirParams = [AirQualityIndicator.olive_pollen]
             };
 
             clientMock

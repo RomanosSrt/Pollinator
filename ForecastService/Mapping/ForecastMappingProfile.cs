@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ForecastService.Models.OpenMeteo.Responses;
+using ForecastService.Models.Pollinator.DAOs;
 using ForecastService.Models.Pollinator.DTOs;
 using System;
 using System.Collections.Generic;
@@ -31,11 +32,19 @@ namespace ForecastService.Mapping
                 .ForMember(dest => dest.TemperatureMax, opt => opt.MapFrom(src => src.daily.temperature_2m_max))
                 .ForMember(dest => dest.TemperatureMin, opt => opt.MapFrom(src => src.daily.temperature_2m_min))
                 .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.daily.wind_speed_10m_max))
-                .ForMember(dest => dest.PercipitationPct, opt => opt.MapFrom(src => src.daily.precipitation_probability_max))
+                .ForMember(dest => dest.PrecipitationPct, opt => opt.MapFrom(src => src.daily.precipitation_probability_max))
                 .ForMember(dest => dest.Humidity, opt => opt.MapFrom(src => src.daily.relative_humidity_2m_max))
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.daily.time));
 
-
+            CreateMap<WeatherDAO, WeatherDTO>()
+                .ForMember(dest => dest.WmoCode, opt => opt.MapFrom(src => src.WmoCode))
+                .ForMember(dest => dest.TemperatureMax, opt => opt.MapFrom(src => src.TemperatureMax))
+                .ForMember(dest => dest.TemperatureMin, opt => opt.MapFrom(src => src.TemperatureMin))
+                .ForMember(dest => dest.WindSpeed, opt => opt.MapFrom(src => src.WindSpeed))
+                .ForMember(dest => dest.PrecipitationPct, opt => opt.MapFrom(src => src.PrecipitationPct))
+                .ForMember(dest => dest.Humidity, opt => opt.MapFrom(src => src.Humidity))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.Time))
+                .ReverseMap();
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="ForecastService.Models.Pollinator.DAOs.WeatherDAO">
-    <Position X="9.75" Y="1" Width="1.5" />
+  <Class Name="ForecastService.Models.Pollinator.DAOs.WeatherDAO" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAIAAAAAAADAAAAAAAAAAAAAACCAAAAAYA=</HashCode>
       <FileName>Models\Pollinator\DAOs\WeatherDAO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ForecastService.Models.OpenMeteo.Responses.WeatherForecastResponse">
-    <Position X="6.75" Y="0.5" Width="2" />
+    <Position X="8.5" Y="0.5" Width="2" />
     <TypeIdentifier>
       <HashCode>ABAAQAAABAAAAACABAAAAIAACAAAAABAAAgAAEAAAAA=</HashCode>
       <FileName>Models\OpenMeteo\Responses\WeatherForecastResponse.cs</FileName>
@@ -36,11 +36,40 @@
       <FileName>Models\Pollinator\DTOs\WeatherDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="ForecastService.Models.Pollinator.QueryParams.AirQualityParams">
+    <Position X="3.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Pollinator\QueryParams\AirQualityParams.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ForecastService.Models.OpenMeteo.Responses.AirQualityResponse">
+    <Position X="6.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAABAAAAACgAAAAAIAACAAAABBAAAgAAEAAAAA=</HashCode>
+      <FileName>Models\OpenMeteo\Responses\AirQualityResponse.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ForecastService.Models.Pollinator.DAOs.AirQualityDAO">
+    <Position X="9.5" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAgACAAEQACAAAACAABAAAAAAAAAAAAAQAAgZg=</HashCode>
+      <FileName>Models\Pollinator\DAOs\AirQualityDAO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="ForecastService.Models.Pollinator.QueryParams.WeatherIndicator">
     <Position X="0.5" Y="3.75" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAhAAAAIAAAAABgIAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Pollinator\QueryParams\WeatherIndicator.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ForecastService.Models.Pollinator.QueryParams.AirQualityIndicator">
+    <Position X="3.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAQAIAAAAAAIQAQAAAAAAEBAIAAAAAAMAAAAAAQ=</HashCode>
+      <FileName>Models\Pollinator\QueryParams\AirQualityIndicator.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

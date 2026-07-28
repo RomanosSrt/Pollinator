@@ -33,24 +33,22 @@ namespace Tests.Forecast
         }
 
         // A minimal valid AirQualityParams used across many tests.
-        private static AirQualityParams ValidParams() => new()
+        private static List<AirQualityIndicator> ValidParams() => new()
         {
-            Latitudes = [37.98f],
-            Longitudes = [23.73f],
-            HourlyAirParams = [AirQualityIndicator.olive_pollen, AirQualityIndicator.grass_pollen]
+            AirQualityIndicator.olive_pollen, AirQualityIndicator.grass_pollen
         };
 
         // A realistic API response object.
         private static AirQualityResponse SampleResponse() => new()
         {
-            latitude = 37.98,
-            longitude = 23.73,
+            latitude = 37.98f,
+            longitude = 23.73f,
             timezone = "Europe/Athens",
             hourly = new Hourly
             {
                 time = ["2026-05-26T00:00", "2026-05-26T01:00"],
-                olive_pollen = [12.5, 14.0],
-                grass_pollen = [3.0, 4.5],
+                olive_pollen = [12.5f, 14.0f],
+                grass_pollen = [3.0f, 4.5f],
                 alder_pollen = [],
                 birch_pollen = [],
                 mugwort_pollen = [],
@@ -72,7 +70,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            var result = await sut.Get5DAirQualForecast(ValidParams());
+            var result = await sut.LoadAirQualForecast(ValidParams());
 
             // Assert
             Assert.True(result.IsSuccess);                        // no error message was set
@@ -91,7 +89,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.Get5DAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast(ValidParams());
 
             // Assert — Moq lets you verify a mock was called a specific number of times
             clientMock.Verify(
@@ -112,7 +110,7 @@ namespace Tests.Forecast
 
             // Act + Assert — Assert.ThrowsAsync verifies the expected exception is thrown
             await Assert.ThrowsAsync<HttpRequestException>(
-                () => sut.Get5DAirQualForecast(ValidParams()));
+                () => sut.LoadAirQualForecast(ValidParams()));
         }
 
         [Fact]
@@ -128,7 +126,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.Get5DAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast(ValidParams());
 
             // Assert — the URL must carry the latitude we passed in
             Assert.NotNull(capturedUrl);
@@ -146,7 +144,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get5DAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("23.73", capturedUrl);
@@ -163,7 +161,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get5DAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("olive_pollen", capturedUrl);
@@ -181,7 +179,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get5DAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast(ValidParams());
 
             Assert.NotNull(capturedUrl);
             Assert.StartsWith("https://air-quality-api.open-meteo.com", capturedUrl);
@@ -193,19 +191,14 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
             string? capturedUrl = null;
 
-            var allTypesParams = new AirQualityParams
-            {
-                Latitudes = [37.98f],
-                Longitudes = [23.73f],
-                HourlyAirParams = Enum.GetValues<AirQualityIndicator>().ToList()
-            };
+            List<AirQualityIndicator> allTypesParams = Enum.GetValues<AirQualityIndicator>().ToList();
 
             clientMock
                 .Setup(c => c.GetAsync<AirQualityResponse>(It.IsAny<string>()))
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get5DAirQualForecast(allTypesParams);
+            await sut.LoadAirQualForecast(allTypesParams);
 
             // Every pollen type must be present in the query string
             foreach (var pollenType in Enum.GetValues<AirQualityIndicator>())
@@ -225,11 +218,9 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
             string? capturedUrl = null;
 
-            var parameters = new AirQualityParams
+            var parameters = new List<AirQualityIndicator>
             {
-                Latitudes = [37.98f],
-                Longitudes = [23.73f],
-                HourlyAirParams = [AirQualityIndicator.olive_pollen]
+                AirQualityIndicator.olive_pollen
             };
 
             clientMock
@@ -237,7 +228,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get5DAirQualForecast(parameters);
+            await sut.LoadAirQualForecast(parameters);
 
             Assert.Contains(forecastDays.ToString(), capturedUrl);
         }
@@ -252,11 +243,9 @@ namespace Tests.Forecast
             var (sut, clientMock) = CreateSut();
             string? capturedUrl = null;
 
-            var parameters = new AirQualityParams
+            var parameters = new List<AirQualityIndicator>
             {
-                Latitudes = [lat],
-                Longitudes = [lon],
-                HourlyAirParams = [AirQualityIndicator.olive_pollen]
+                AirQualityIndicator.olive_pollen
             };
 
             clientMock
@@ -264,7 +253,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.Get5DAirQualForecast(parameters);
+            await sut.LoadAirQualForecast(parameters);
 
             Assert.Contains(lat.ToString(), capturedUrl);
             Assert.Contains(lon.ToString(), capturedUrl);

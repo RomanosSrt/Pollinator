@@ -22,7 +22,7 @@ using AutoMapper;
 namespace ForecastService.Services
 {
     public class ForecastDataService(
-        ILogger<ForecastDataService> _logger, 
+        ILogger<ForecastDataService> _logger,
         IOptions<OpenMeteoSettings> openMeteoSettings,
         IForecastClient client,
         IYpenService _ypenService,
@@ -32,20 +32,25 @@ namespace ForecastService.Services
         private readonly OpenMeteoSettings _openMeteoSettings = openMeteoSettings.Value;
 
         #region Init services
-        public async Task<ServiceResponse<List<AirQualityResponse>>> Get5DAirQualForecast(AirQualityParams queryParams)
+        public async Task<ServiceResponse<List<AirQualityResponse>>> LoadAirQualForecast(List<AirQualityIndicator> indexes)
         {
-            string method = "Get5DAirQualForecast";
-            _logger.LogInformation("IN Method {method} called with parameters: {parameters}", method, queryParams);
+            string method = "LoadAirQualForecast";
+            _logger.LogInformation($"IN Method {method} called requesting {indexes.Count} parameters");
             try
             {
-                var requestUri = CreateQueryUrl(queryParams, openMeteoSettings.Value.AirQualityBaseUrl);
+                AirQualityParams airQualityParams = new AirQualityParams()
+                {
+                    HourlyAirParams = indexes
+                };
+                List<RegionCenterDto> centers = await ExtractCenters(airQualityParams);
+                var requestUri = CreateQueryUrl(airQualityParams, openMeteoSettings.Value.AirQualityBaseUrl);
                 var resp = await client.GetAsync<List<AirQualityResponse>>(requestUri);
-                if (resp is null)
-                    throw new Exception("Response from the API is null.");
+                if (resp.Count != centers.Count)
+                    throw new Exception($"Open-Meteo returned {resp.Count} results but {centers.Count} centers were requested — cannot reliably match Kalcode.");
+                //TODO this should be removed when finalized
                 _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
-                //List<AirQualityDAO> airQualityData = resp
-                    //.GroupBy(x => new { x. })
-                    
+                var airquality = AirQualityToCentersMerger(centers, resp);
+                await _repository.UpdateAirQualityAsync(airquality);
                 return new ServiceResponse<List<AirQualityResponse>>(resp);
             }
             catch (Exception ex)
@@ -55,9 +60,49 @@ namespace ForecastService.Services
             }
         }
 
-        public async Task<ServiceResponse<List<WeatherDTO>>> Get5DWeatherForecast(List<WeatherIndicator> indexes)
+        private List<AirQualityDAO> AirQualityToCentersMerger(List<RegionCenterDto> centers, List<AirQualityResponse> airQuality)
         {
-            string method = "Get5DWeatherForecast";
+            var result = new List<AirQualityDAO>();
+            for (int i = 0; i < centers.Count; i++)
+            {
+                var center = centers[i];
+                var hourlyData = airQuality[i].hourly;
+                if (Math.Abs(center.Latitude - airQuality[i].latitude) > 0.1 ||
+                    Math.Abs(center.Longitude - airQuality[i].longitude) > 0.1)
+                    throw new Exception($"Mismatch between center coordinates and air quality response for Kalcode {center.KALCODE}. Center: ({center.Latitude}, {center.Longitude}), Weather: ({airQuality[i].latitude}, {airQuality[i].longitude})");
+
+                var days = hourlyData.time
+                    .Select((t, idx) => (Date: DateOnly.Parse(t), Index: idx))
+                    .GroupBy(x => x.Date);
+
+                foreach (var day in days)
+                {
+                    result.Add(new AirQualityDAO
+                    {
+                        Kalcode = center.KALCODE,
+                        Time = day.Key,
+                        Dust = day.Average(x => hourlyData.dust![x.Index] ?? 0),
+                        AlderPollen = day.Average(x => hourlyData.alder_pollen![x.Index] ?? 0),
+                        BirchPollen = day.Average(x => hourlyData.birch_pollen![x.Index] ?? 0),
+                        GrassPollen = day.Average(x => hourlyData.grass_pollen![x.Index] ?? 0),
+                        MugwortPollen = day.Average(x => hourlyData.mugwort_pollen![x.Index] ?? 0),
+                        OlivePollen = day.Average(x => hourlyData.olive_pollen![x.Index] ?? 0),
+                        RagweedPollen = day.Average(x => hourlyData.ragweed_pollen![x.Index] ?? 0),
+                        PM10 = day.Average(x => hourlyData.pm10![x.Index] ?? 0),
+                        PM2_5 = day.Average(x => hourlyData.pm2_5![x.Index] ?? 0),
+                        AQI = day.Average(x => hourlyData.european_aqi![x.Index] ?? 0),
+                        O3 = day.Average(x => hourlyData.ozone![x.Index] ?? 0),
+                        NO2 = day.Average(x => hourlyData.nitrogen_dioxide![x.Index] ?? 0)
+                    });
+                }
+            }
+            return result;
+            //throw new NotImplementedException();
+        }
+
+        public async Task<ServiceResponse<List<WeatherDTO>>> LoadWeatherForecast(List<WeatherIndicator> indexes)
+        {
+            string method = "LoadWeatherForecast";
             _logger.LogInformation("IN Method {method} called requesting {count} indexes", method, indexes.Count);
             try
             {
@@ -70,7 +115,6 @@ namespace ForecastService.Services
                 var resp = await client.GetAsync<List<WeatherForecastResponse>>(requestUri);
                 if (resp.Count != centers.Count)
                     throw new Exception($"Open-Meteo returned {resp.Count} results but {centers.Count} centers were requested — cannot reliably match Kalcode.");
-
                 var weather = WeatherToCentersMerger(centers, resp);
                 await _repository.UpdateWeatherAsync(weather);
                 _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
@@ -125,7 +169,7 @@ namespace ForecastService.Services
             List<WeatherDAO> weatherDTOs = new List<WeatherDAO>();
             for (int i = 0; i < centers.Count; i++)
             {
-                if (Math.Abs(centers[i].Latitude - weather[i].latitude) > 0.1 &&
+                if (Math.Abs(centers[i].Latitude - weather[i].latitude) > 0.1 ||
                     Math.Abs(centers[i].Longitude - weather[i].longitude) > 0.1 )
                     throw new Exception($"Mismatch between center coordinates and weather response for Kalcode {centers[i].KALCODE}. Center: ({centers[i].Latitude}, {centers[i].Longitude}), Weather: ({weather[i].latitude}, {weather[i].longitude})");
                 for (int j = 0; j < weather[i].daily.time.Count; j++)

@@ -72,9 +72,8 @@ namespace ForecastService.Helpers
             {
                 await dbCont.AirQuality.ExecuteDeleteAsync();
                 dbCont.AirQuality.AddRange(airQualityData);
-                var save = dbCont.SaveChangesAsync();
-                var commit = transaction.CommitAsync();
-                await Task.WhenAll(save, commit);
+                await dbCont.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch
             {

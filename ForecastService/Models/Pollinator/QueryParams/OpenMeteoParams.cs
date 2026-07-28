@@ -10,9 +10,9 @@ namespace ForecastService.Models.Pollinator.QueryParams
     {
         [Required]
         [JsonPropertyName("latitude")]
-        public List<double> Latitudes { get; set; } = new List<double>();
+        public List<float> Latitudes { get; set; } = new();
         [Required]
         [JsonPropertyName("longitude")]
-        public List<double> Longitudes { get; set; } = new List<double>();
+        public List<float> Longitudes { get; set; } = new();
     }
 }

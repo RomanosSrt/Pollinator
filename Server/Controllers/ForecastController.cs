@@ -27,10 +27,10 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<ServiceResponse<List<AirQualityResponse>>> Load5DAirForecast([FromQuery] AirQualityParams airParams)
+        public async Task<ServiceResponse<List<AirQualityResponse>>> Load5DAirForecast([FromQuery] List<AirQualityIndicator> airParams)
         {
             _logger.LogInformation($"Requesting air quality indexes using parameters: {airParams}");
-            var airData = await _forecastService.Get5DAirQualForecast(airParams);
+            var airData = await _forecastService.LoadAirQualForecast(airParams);
             return airData;
         }
 
@@ -42,7 +42,7 @@ namespace API.Controllers
         public async Task<ServiceResponse<List<WeatherDTO>>> Load5DWeatherForecast([FromQuery] List<WeatherIndicator> indexes)
         {
             _logger.LogInformation($"Requesting weather indexes using parameters: {indexes}");
-            var weatherData = await _forecastService.Get5DWeatherForecast(indexes);
+            var weatherData = await _forecastService.LoadWeatherForecast(indexes);
             return weatherData;
         }
     }

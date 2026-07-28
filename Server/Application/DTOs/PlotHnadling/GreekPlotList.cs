@@ -21,12 +21,12 @@ namespace API.Application.DTOs.PlotHandling
         [JsonPropertyName("KAEK")]
         public string KAEK { get; set; } = string.Empty;
         [JsonPropertyName("AREA")]
-        public double Area { get; set; }
+        public float Area { get; set; }
     }
 
     public class EsriGeometry
     { 
         [JsonPropertyName("rings")]
-        public double[][][] rings { get; set; } = [];
+        public float[][][] rings { get; set; } = [];
     }
 }

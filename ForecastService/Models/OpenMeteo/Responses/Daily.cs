@@ -8,9 +8,9 @@ namespace ForecastService.Models.OpenMeteo.Responses
     {
         public List<string> time { get; set; } = new();
         public List<int> weather_code { get; set; } = new();
-        public List<double> temperature_2m_max { get; set; } = new();
-        public List<double> temperature_2m_min { get; set; } = new();
-        public List<double> wind_speed_10m_max { get; set; } = new();
+        public List<float> temperature_2m_max { get; set; } = new();
+        public List<float> temperature_2m_min { get; set; } = new();
+        public List<float> wind_speed_10m_max { get; set; } = new();
         public List<int> precipitation_probability_max { get; set; } = new();
         public List<int> relative_humidity_2m_max { get; set; } = new();
     }

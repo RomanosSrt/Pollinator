@@ -11,9 +11,9 @@ namespace YpenService.Models.Pollinator.Persistence
         public string unit_Center { get; set; } = string.Empty;
         public string unit_Name { get; set; } = string.Empty;
         //public string unit_NameCheck { get; set; } = string.Empty;
-        public double unit_Latitude { get; set; } 
-        public double unit_Longitude { get; set; }
+        public float unit_Latitude { get; set; }  = 0f;
+        public float unit_Longitude { get; set; } = 0f;
         public required Geometry unit_Shapes { get; set; }
-        public double unit_Area { get; set; }
+        public float unit_Area { get; set; } = 0f;
     }
 }

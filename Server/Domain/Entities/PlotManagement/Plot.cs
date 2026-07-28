@@ -9,7 +9,7 @@ namespace API.Domain.Entities.PlotManagement
 
         public required string kaek { get; set; }
         public required Geometry polygon { get; set; }
-        public double area { get; set; }
+        public float area { get; set; }
         
         //agricultural info
         public ICollection<CropType>? cropTypes { get; set; }

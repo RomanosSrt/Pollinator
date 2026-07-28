@@ -2,15 +2,15 @@
 {
     public class WeatherForecastResponse : IOpenMeteoResponse
     {
-        public double latitude { get; set; }
-        public double longitude { get; set; }
-        public double generationtime_ms { get; set; }
+        public float latitude { get; set; } = 0;
+        public float longitude { get; set; } = 0;
+        public float generationtime_ms { get; set; } = 0;
         public int utc_offset_seconds { get; set; }
-        public string timezone { get; set; }
-        public string timezone_abbreviation { get; set; }
-        public double elevation { get; set; }
-        public DailyUnits daily_units { get; set; }
-        public Daily daily { get; set; }
+        public string timezone { get; set; } = string.Empty;    
+        public string timezone_abbreviation { get; set; } = string.Empty;
+        public float elevation { get; set; } = 0;
+        public DailyUnits daily_units { get; set; } = new();
+        public Daily daily { get; set; } = new();
         public int? location_id { get; set; }
     }
 }

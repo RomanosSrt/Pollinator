@@ -8,8 +8,8 @@ namespace YpenService.Models.Pollinator.Business
 {
     public class RegionUnitDto : RegionCenterDto
     {
-        public Geometry shape { get; set; } 
-        public double area { get; set; }
+        public Geometry shape { get; set; }
+        public float area { get; set; } = 0;
         //public string regionCheck { get; set; }
 
     }

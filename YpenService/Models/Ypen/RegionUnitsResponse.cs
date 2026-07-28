@@ -27,14 +27,14 @@ namespace YpenService.Models.Ypen
     public class UnitsGeometry
     {
         public string type { get; set; } = string.Empty;
-        public List<List<List<List<double>>>> coordinates { get; set; } = new();
+        public List<List<List<List<float>>>> coordinates { get; set; } = new();
     }
 
     public class UnitProperties
     {
         public string KALCODE { get; set; } = string.Empty;
         public string LEKTIKO { get; set; } = string.Empty;
-        public double AREA_km2 { get; set; }
+        public float AREA_km2 { get; set; }
         public int MON_2011 { get; set; }
         public int MON_2001 { get; set; }
         public int MON_1991 { get; set; }

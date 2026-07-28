@@ -23,8 +23,8 @@ namespace YpenService.Mapping
                     KALCODE = f.properties.KALCODE.Remove(2),
                     Name = f.properties.EDRA,
                     Region = "Π.Ε. " + f.properties.PE_ENOTHTA,
-                    Latitude = Math.Round(f.properties.LAT, 3),
-                    Longitude = Math.Round(f.properties.LON, 3)
+                    Latitude = (float)Math.Round(f.properties.LAT, 3),
+                    Longitude = (float)Math.Round(f.properties.LON, 3)
                 })
                 .ToList());
 

@@ -28,14 +28,14 @@ namespace YpenService.Models.Ypen
     public class CenterGeometry
     {
         public string type { get; set; } = string.Empty;
-        public List<double> coordinates { get; set; } = new List<double>();
+        public List<float> coordinates { get; set; } = new();
     }
 
     public class Properties
     {
         public string KALCODE { get; set; } = string.Empty;
-        public double LAT { get; set; }
-        public double LON { get; set; }
+        public float LAT { get; set; }
+        public float LON { get; set; }
         public string EDRA { get; set; } = string.Empty;    
         public string PE_ENOTHTA { get; set; } = string.Empty;
         public int MON_2011 { get; set; } 

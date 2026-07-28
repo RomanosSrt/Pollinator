@@ -9,7 +9,7 @@ namespace YpenService.Models.Pollinator.Persistence
         public string KALCODE { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public float Latitude { get; set; } = 0f;
+        public float Longitude { get; set; } = 0f;
     }
 }

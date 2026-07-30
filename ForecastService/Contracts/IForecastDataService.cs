@@ -12,12 +12,12 @@ namespace ForecastService.Contracts
     {
         #region AirQuality Services
         Task<List<AirQualityDTO>> GetTotalAirQuality4D();
-        Task<AirQualityDTO> GetAirQuality4DById(string kalcode);
+        Task<List<AirQualityDTO>> GetAirQuality4DById(string kalcode);
         #endregion
 
         #region Weather Services
         Task<List<WeatherDTO>> GetTotalWeather4D();
-        Task<WeatherDTO> GetWeather4DById(string kalcode);
+        Task<List<WeatherDTO>> GetWeather4DById(string kalcode);
         #endregion
 
         #region Init Services

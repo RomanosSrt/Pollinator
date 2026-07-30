@@ -17,10 +17,10 @@ namespace ForecastService.Helpers
 {
     public class ForecastRepository(
         ILogger<ForecastRepository> logger,
-        ForecastDbContext dbCont,
-        IMapper mapper) : IForecastRepository
+        ForecastDbContext dbCont) : IForecastRepository
     {
-        public async Task<List<AirQualityDAO>> GetAirQualityAsync(List<RegionCenterDto> centers, DateOnly date)
+        #region Air Quality
+        public async Task<List<AirQualityDAO>> GetAirQualityAsync(List<RegionCenterDto> centers)
         {
             string methodName = "GetAirQualityAsync";
             logger.LogInformation($"IN {methodName}");
@@ -29,7 +29,7 @@ namespace ForecastService.Helpers
             List<string> kalcodes = centers.Select(c => c.KALCODE).ToList();
             logger.LogInformation("Acquiring air quality data from DB");
             List<AirQualityDAO> airQualityData = await dbCont.AirQuality
-                .Where(p => kalcodes.Contains(p.Kalcode) && p.Time == date)
+                .Where(p => kalcodes.Contains(p.Kalcode))
                 .ToListAsync();
             if (airQualityData == null || airQualityData.Count == 0)
             {
@@ -39,27 +39,6 @@ namespace ForecastService.Helpers
             logger.LogInformation($"Air quality data acquired, total items: {airQualityData.Count}");
             logger.LogInformation($"OUT {methodName}");
             return airQualityData;
-        }
-
-        public async Task<List<WeatherDAO>> GetWeatherAsync(List<RegionCenterDto> centers, DateOnly date)
-        {
-            string methodName = "GetWeatherAsync";
-            logger.LogInformation($"IN {methodName}");
-            logger.LogInformation("Acquiring weather data from DB");
-            if (!centers.Any())
-                throw new ArgumentException("Centers list cannot be empty");
-            List<string> kalcodes = centers.Select(c => c.KALCODE).ToList();
-            List<WeatherDAO> weatherData = await dbCont.Weather
-                .Where(p => kalcodes.Contains(p.Kalcode) && p.Time == date)
-                .ToListAsync();
-            if (weatherData == null || weatherData.Count == 0)
-            {
-                logger.LogError("No Greek region units found in DB");
-                throw new Exception("No Greek region units found in DB");
-            }
-            logger.LogInformation($"Weather data acquired, total items: {weatherData.Count}");
-            logger.LogInformation($"OUT {methodName}");
-            return weatherData;
         }
 
         public async Task<List<AirQualityDAO>> UpdateAirQualityAsync(List<AirQualityDAO> airQualityData)
@@ -84,6 +63,33 @@ namespace ForecastService.Helpers
             logger.LogInformation($"OUT {methodName}");
             return airQualityData;
         }
+        #endregion
+
+
+
+
+        #region Weather
+        public async Task<List<WeatherDAO>> GetWeatherAsync(List<RegionCenterDto> centers)
+        {
+            string methodName = "GetWeatherAsync";
+            logger.LogInformation($"IN {methodName}");
+            logger.LogInformation("Acquiring weather data from DB");
+            if (!centers.Any())
+                throw new ArgumentException("Centers list cannot be empty");
+            List<string> kalcodes = centers.Select(c => c.KALCODE).ToList();
+            List<WeatherDAO> weatherData = await dbCont.Weather
+                .Where(p => kalcodes.Contains(p.Kalcode))
+                .ToListAsync();
+            if (weatherData == null || weatherData.Count == 0)
+            {
+                logger.LogError("No Greek region units found in DB");
+                throw new Exception("No Greek region units found in DB");
+            }
+            logger.LogInformation($"Weather data acquired, total items: {weatherData.Count}");
+            logger.LogInformation($"OUT {methodName}");
+            return weatherData;
+        }
+
 
         public async Task<List<WeatherDAO>> UpdateWeatherAsync(List<WeatherDAO> weatherData)
         {
@@ -107,5 +113,7 @@ namespace ForecastService.Helpers
             logger.LogInformation($"OUT {methodName}");
             return weatherData;
         }
+
+        #endregion
     }
 }

@@ -27,6 +27,23 @@ namespace ForecastService.Mapping
                 .ForMember(dest => dest.NO2, opt => opt.MapFrom(src => src.hourly.nitrogen_dioxide))
                 .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.hourly.time));
             
+            CreateMap<AirQualityDAO, AirQualityDTO>()
+                .ForMember(dest => dest.Dust, opt => opt.MapFrom(src => src.Dust))
+                .ForMember(dest => dest.AlderPollen, opt => opt.MapFrom(src => src.AlderPollen))
+                .ForMember(dest => dest.BirchPollen, opt => opt.MapFrom(src => src.BirchPollen))
+                .ForMember(dest => dest.GrassPollen, opt => opt.MapFrom(src => src.GrassPollen))
+                .ForMember(dest => dest.MugwortPollen, opt => opt.MapFrom(src => src.MugwortPollen))
+                .ForMember(dest => dest.OlivePollen, opt => opt.MapFrom(src => src.OlivePollen))
+                .ForMember(dest => dest.RagweedPollen, opt => opt.MapFrom(src => src.RagweedPollen))
+                .ForMember(dest => dest.PM10, opt => opt.MapFrom(src => src.PM10))
+                .ForMember(dest => dest.PM2_5, opt => opt.MapFrom(src => src.PM2_5))
+                .ForMember(dest => dest.AQI, opt => opt.MapFrom(src => src.AQI))
+                .ForMember(dest => dest.O3, opt => opt.MapFrom(src => src.O3))
+                .ForMember(dest => dest.NO2, opt => opt.MapFrom(src => src.NO2))
+                .ForMember(dest => dest.Time, opt => opt.MapFrom(src => src.Time))
+                .ReverseMap();
+
+
             CreateMap<WeatherForecastResponse, WeatherDTO>()
                 .ForMember(dest => dest.WmoCode, opt => opt.MapFrom(src => src.daily.weather_code))
                 .ForMember(dest => dest.TemperatureMax, opt => opt.MapFrom(src => src.daily.temperature_2m_max))

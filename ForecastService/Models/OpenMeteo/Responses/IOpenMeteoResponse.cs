@@ -4,7 +4,6 @@ using System.Text;
 
 namespace ForecastService.Models.OpenMeteo.Responses
 {
-    public interface IOpenMeteoResponse
-    {
-    }
+    public interface IOpenMeteoResponse { }
+
 }

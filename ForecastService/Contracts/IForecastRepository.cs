@@ -14,11 +14,11 @@ namespace ForecastService.Contracts
         #endregion
 
         #region Weather
-        Task<List<WeatherDAO>> GetWeatherAsync(List<RegionCenterDto> centers, DateOnly date);
+        Task<List<WeatherDAO>> GetWeatherAsync(List<RegionCenterDto> centers);
         #endregion
 
         #region AirQuality
-        Task<List<AirQualityDAO>> GetAirQualityAsync(List<RegionCenterDto> centers, DateOnly date);
+        Task<List<AirQualityDAO>> GetAirQualityAsync(List<RegionCenterDto> centers);
         #endregion
     }
 }

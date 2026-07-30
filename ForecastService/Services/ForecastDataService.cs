@@ -134,29 +134,49 @@ namespace ForecastService.Services
 
 
         #region AirQuality Services
-        public Task<List<AirQualityDTO>> GetTotalAirQuality4D()
+        public async Task<List<AirQualityDTO>> GetTotalAirQuality4D()
         {
-            return null;
+            string method = "GetTotalAirQuality4D";
+            _logger.LogInformation($"IN Method {method} called");
+            AirQualityParams airQualityParamsList = new();
+            List<RegionCenterDto> centers = await ExtractCenters(airQualityParamsList);
+            List<AirQualityDAO> airData = await _repository.GetAirQualityAsync(centers);
+            _logger.LogInformation($"OUT Method {method} returning {airData.Count} records");
+            return _mapper.Map<List<AirQualityDTO>>(airData);
         }
-        public Task<AirQualityDTO> GetAirQuality4DById(string kalcode)
+        public async Task<List<AirQualityDTO>> GetAirQuality4DById(string kalcode)
         {
-            return null;
+            string method = "GetAirQuality4DById";
+            _logger.LogInformation($"IN Method {method} called with kalcode: {kalcode}");
+            AirQualityParams airParamsList = new();
+            List<RegionCenterDto> centers = await ExtractCenter(airParamsList, kalcode);
+            List<AirQualityDAO> airData = await _repository.GetAirQualityAsync(centers);
+            _logger.LogInformation($"OUT Method {method} returning {airData.Count} record for kalcode: {kalcode}");
+            return _mapper.Map<List<AirQualityDTO>>(airData);
         }
         #endregion
 
         #region Weather Services
         public async Task<List<WeatherDTO>> GetTotalWeather4D()
         {
-            DateOnly today = DateOnly.FromDateTime(DateTime.Now);
-            WeatherParams weatherParamsList = new WeatherParams();
+            string method = "GetTotalWeather4D";
+            _logger.LogInformation($"IN Method {method} called");
+            WeatherParams weatherParamsList = new();
             List<RegionCenterDto> centers = await ExtractCenters(weatherParamsList);
-            List<WeatherDAO> weatherData = await _repository.GetWeatherAsync(centers, today);
+            List<WeatherDAO> weatherData = await _repository.GetWeatherAsync(centers);
+            _logger.LogInformation($"OUT Method {method} returning {weatherData.Count} records");
             return _mapper.Map<List<WeatherDTO>>(weatherData);
         }
 
-        public Task<WeatherDTO> GetWeather4DById(string kalcode)
+        public async Task<List<WeatherDTO>> GetWeather4DById(string kalcode)
         {
-            return null;
+            string method = "GetWeather4DById";
+            _logger.LogInformation($"IN Method {method} called with kalcode: {kalcode}");
+            WeatherParams weatherParamsList = new();
+            List<RegionCenterDto> centers = await ExtractCenter(weatherParamsList, kalcode);
+            List<WeatherDAO> weatherData = await _repository.GetWeatherAsync(centers);
+            _logger.LogInformation($"OUT Method {method} returning {weatherData.Count} record for kalcode: {kalcode}");
+            return _mapper.Map<List<WeatherDTO>>(weatherData);
         }
         #endregion
 
@@ -206,6 +226,18 @@ namespace ForecastService.Services
             }
             _logger.LogInformation($"{centers.Count} region centers successfully acquired");
             return centers;
+        }
+
+        private async Task<List<RegionCenterDto>> ExtractCenter(OpenMeteoParams paramsType, string kalcode)
+        {
+            _logger.LogInformation($"Acquiring region center for forecast data request");
+            RegionCenterDto center = await _ypenService.GetCenter(kalcode);
+            if (center is null)
+                throw new Exception($"No region center found with kalcode: {kalcode}.");
+            paramsType.Latitudes.Add(center.Latitude);
+            paramsType.Longitudes.Add(center.Longitude);
+            _logger.LogInformation($"Region center with kalcode:{kalcode} successfully acquired");
+            return new List<RegionCenterDto> { center };
         }
 
         private string CreateQueryUrl<TRequest>(TRequest queryParams, string url)

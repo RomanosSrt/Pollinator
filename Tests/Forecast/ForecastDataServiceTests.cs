@@ -70,7 +70,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            var result = await sut.LoadAirQualForecast(ValidParams());
+            var result = await sut.LoadAirQualForecast();
 
             // Assert
             Assert.True(result.IsSuccess);                        // no error message was set
@@ -89,7 +89,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.LoadAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast();
 
             // Assert — Moq lets you verify a mock was called a specific number of times
             clientMock.Verify(
@@ -110,7 +110,7 @@ namespace Tests.Forecast
 
             // Act + Assert — Assert.ThrowsAsync verifies the expected exception is thrown
             await Assert.ThrowsAsync<HttpRequestException>(
-                () => sut.LoadAirQualForecast(ValidParams()));
+                () => sut.LoadAirQualForecast());
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Tests.Forecast
                 .ReturnsAsync(SampleResponse());
 
             // Act
-            await sut.LoadAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast();
 
             // Assert — the URL must carry the latitude we passed in
             Assert.NotNull(capturedUrl);
@@ -144,7 +144,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.LoadAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast();
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("23.73", capturedUrl);
@@ -161,7 +161,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.LoadAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast();
 
             Assert.NotNull(capturedUrl);
             Assert.Contains("olive_pollen", capturedUrl);
@@ -179,7 +179,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.LoadAirQualForecast(ValidParams());
+            await sut.LoadAirQualForecast();
 
             Assert.NotNull(capturedUrl);
             Assert.StartsWith("https://air-quality-api.open-meteo.com", capturedUrl);
@@ -198,7 +198,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.LoadAirQualForecast(allTypesParams);
+            await sut.LoadAirQualForecast();
 
             // Every pollen type must be present in the query string
             foreach (var pollenType in Enum.GetValues<AirQualityIndicator>())
@@ -228,7 +228,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.LoadAirQualForecast(parameters);
+            await sut.LoadAirQualForecast();
 
             Assert.Contains(forecastDays.ToString(), capturedUrl);
         }
@@ -253,7 +253,7 @@ namespace Tests.Forecast
                 .Callback<string>(url => capturedUrl = url)
                 .ReturnsAsync(SampleResponse());
 
-            await sut.LoadAirQualForecast(parameters);
+            await sut.LoadAirQualForecast();
 
             Assert.Contains(lat.ToString(), capturedUrl);
             Assert.Contains(lon.ToString(), capturedUrl);

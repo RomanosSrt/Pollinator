@@ -20,5 +20,9 @@ namespace ForecastService.Contracts
         #region AirQuality
         Task<List<AirQualityDAO>> GetAirQualityAsync(List<RegionCenterDto> centers);
         #endregion
+
+        #region Time
+        Task<DateOnly?> GetTimeAsync();
+        #endregion
     }
 }

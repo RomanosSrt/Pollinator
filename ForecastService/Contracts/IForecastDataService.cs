@@ -21,8 +21,9 @@ namespace ForecastService.Contracts
         #endregion
 
         #region Init Services
-        Task<ServiceResponse<List<AirQualityResponse>>> LoadAirQualForecast(List<AirQualityIndicator> indexes);
-        Task<ServiceResponse<List<WeatherDTO>>> LoadWeatherForecast(List<WeatherIndicator> indexes);
+        Task<ServiceResponse<List<AirQualityResponse>>> LoadAirQualForecast();
+        Task<ServiceResponse<List<WeatherDTO>>> LoadWeatherForecast();
+        Task<bool> CheckDBData();
         #endregion
     }
 }

@@ -24,6 +24,7 @@ namespace YpenService.Contracts
         Task<ServiceResponse<List<RegionUnitDto>>> GetYpenRegionUnits();
         Task<ServiceResponse<List<RegionCenterDto>>> GetYpenRegionCenters();
         Task<List<RegionUnit>> PersistUnits(List<RegionCenterDto> centers, List<RegionUnitDto> units);
+        Task<List<RegionUnit>> ImportRegions();
         #endregion
     }
 }

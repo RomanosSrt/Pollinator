@@ -18,6 +18,7 @@ using YpenService.Contracts;
 using YpenService.Models.Pollinator.Business;
 using ForecastService.Mapping;
 using AutoMapper;
+using System.Data.SqlTypes;
 
 namespace ForecastService.Services
 {
@@ -32,9 +33,43 @@ namespace ForecastService.Services
         private readonly OpenMeteoSettings _openMeteoSettings = openMeteoSettings.Value;
 
         #region Init services
-        public async Task<ServiceResponse<List<AirQualityResponse>>> LoadAirQualForecast(List<AirQualityIndicator> indexes)
+
+        public async Task<bool> CheckDBData()
+        {
+            string method = "CheckDBData";
+            _logger.LogInformation($"IN Method {method} called");
+            try
+            {
+                return (await _repository.GetTimeAsync()) < DateOnly.FromDateTime(DateTime.Now);
+            } catch (SqlNullValueException ex)
+            {
+                _logger.LogError($"ERROR Method {method} failed: Database is empty!");
+                return true;
+            } catch (Exception ex)
+            {
+                _logger.LogError($"ERROR Method {method} failed with exception: {ex?.Message ?? "Unknown exception!"}");
+                throw;
+            }
+        }
+
+        public async Task<ServiceResponse<List<AirQualityResponse>>> LoadAirQualForecast()
         {
             string method = "LoadAirQualForecast";
+            List<AirQualityIndicator> indexes = new List<AirQualityIndicator>()
+            {
+                AirQualityIndicator.alder_pollen,
+                AirQualityIndicator.birch_pollen,
+                AirQualityIndicator.grass_pollen,
+                AirQualityIndicator.mugwort_pollen,
+                AirQualityIndicator.olive_pollen,
+                AirQualityIndicator.ragweed_pollen,
+                AirQualityIndicator.dust,
+                AirQualityIndicator.european_aqi,
+                AirQualityIndicator.pm2_5,
+                AirQualityIndicator.pm10,
+                AirQualityIndicator.ozone,
+                AirQualityIndicator.nitrogen_dioxide
+            };
             _logger.LogInformation($"IN Method {method} called requesting {indexes.Count} parameters");
             try
             {
@@ -48,7 +83,7 @@ namespace ForecastService.Services
                 if (resp.Count != centers.Count)
                     throw new Exception($"Open-Meteo returned {resp.Count} results but {centers.Count} centers were requested — cannot reliably match Kalcode.");
                 //TODO this should be removed when finalized
-                _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
+                _logger.LogInformation("OUT Method {method}", method);
                 var airquality = AirQualityToCentersMerger(centers, resp);
                 await _repository.UpdateAirQualityAsync(airquality);
                 return new ServiceResponse<List<AirQualityResponse>>(resp);
@@ -60,49 +95,19 @@ namespace ForecastService.Services
             }
         }
 
-        private List<AirQualityDAO> AirQualityToCentersMerger(List<RegionCenterDto> centers, List<AirQualityResponse> airQuality)
-        {
-            var result = new List<AirQualityDAO>();
-            for (int i = 0; i < centers.Count; i++)
-            {
-                var center = centers[i];
-                var hourlyData = airQuality[i].hourly;
-                if (Math.Abs(center.Latitude - airQuality[i].latitude) > 0.1 ||
-                    Math.Abs(center.Longitude - airQuality[i].longitude) > 0.1)
-                    throw new Exception($"Mismatch between center coordinates and air quality response for Kalcode {center.KALCODE}. Center: ({center.Latitude}, {center.Longitude}), Weather: ({airQuality[i].latitude}, {airQuality[i].longitude})");
 
-                var days = hourlyData.time
-                    .Select((t, idx) => (Date: DateOnly.Parse(t), Index: idx))
-                    .GroupBy(x => x.Date);
-
-                foreach (var day in days)
-                {
-                    result.Add(new AirQualityDAO
-                    {
-                        Kalcode = center.KALCODE,
-                        Time = day.Key,
-                        Dust = day.Average(x => hourlyData.dust![x.Index] ?? 0),
-                        AlderPollen = day.Average(x => hourlyData.alder_pollen![x.Index] ?? 0),
-                        BirchPollen = day.Average(x => hourlyData.birch_pollen![x.Index] ?? 0),
-                        GrassPollen = day.Average(x => hourlyData.grass_pollen![x.Index] ?? 0),
-                        MugwortPollen = day.Average(x => hourlyData.mugwort_pollen![x.Index] ?? 0),
-                        OlivePollen = day.Average(x => hourlyData.olive_pollen![x.Index] ?? 0),
-                        RagweedPollen = day.Average(x => hourlyData.ragweed_pollen![x.Index] ?? 0),
-                        PM10 = day.Average(x => hourlyData.pm10![x.Index] ?? 0),
-                        PM2_5 = day.Average(x => hourlyData.pm2_5![x.Index] ?? 0),
-                        AQI = day.Average(x => hourlyData.european_aqi![x.Index] ?? 0),
-                        O3 = day.Average(x => hourlyData.ozone![x.Index] ?? 0),
-                        NO2 = day.Average(x => hourlyData.nitrogen_dioxide![x.Index] ?? 0)
-                    });
-                }
-            }
-            return result;
-            //throw new NotImplementedException();
-        }
-
-        public async Task<ServiceResponse<List<WeatherDTO>>> LoadWeatherForecast(List<WeatherIndicator> indexes)
+        public async Task<ServiceResponse<List<WeatherDTO>>> LoadWeatherForecast()
         {
             string method = "LoadWeatherForecast";
+            List<WeatherIndicator> indexes = new()
+            {
+                WeatherIndicator.precipitation_probability_max,
+                WeatherIndicator.wind_speed_10m_max,
+                WeatherIndicator.temperature_2m_max,
+                WeatherIndicator.temperature_2m_min,
+                WeatherIndicator.weather_code,
+                WeatherIndicator.relative_humidity_2m_max
+            };
             _logger.LogInformation("IN Method {method} called requesting {count} indexes", method, indexes.Count);
             try
             {
@@ -117,7 +122,7 @@ namespace ForecastService.Services
                     throw new Exception($"Open-Meteo returned {resp.Count} results but {centers.Count} centers were requested — cannot reliably match Kalcode.");
                 var weather = WeatherToCentersMerger(centers, resp);
                 await _repository.UpdateWeatherAsync(weather);
-                _logger.LogInformation("OUT Method {method} got a response: {response}", method, JsonSerializer.Serialize(resp));
+                _logger.LogInformation("OUT Method {method}", method);
                 return new ServiceResponse<List<WeatherDTO>>(_mapper.Map<List<WeatherDTO>>(weather));
             }
             catch (Exception ex)
@@ -209,6 +214,45 @@ namespace ForecastService.Services
             }
             return weatherDTOs;
         }
+        private List<AirQualityDAO> AirQualityToCentersMerger(List<RegionCenterDto> centers, List<AirQualityResponse> airQuality)
+        {
+            var result = new List<AirQualityDAO>();
+            for (int i = 0; i < centers.Count; i++)
+            {
+                var center = centers[i];
+                var hourlyData = airQuality[i].hourly;
+                if (Math.Abs(center.Latitude - airQuality[i].latitude) > 0.1 ||
+                    Math.Abs(center.Longitude - airQuality[i].longitude) > 0.1)
+                    throw new Exception($"Mismatch between center coordinates and air quality response for Kalcode {center.KALCODE}. Center: ({center.Latitude}, {center.Longitude}), Weather: ({airQuality[i].latitude}, {airQuality[i].longitude})");
+
+                var days = hourlyData.time
+                    .Select((t, idx) => (Date: DateOnly.Parse(t), Index: idx))
+                    .GroupBy(x => x.Date);
+
+                foreach (var day in days)
+                {
+                    result.Add(new AirQualityDAO
+                    {
+                        Kalcode = center.KALCODE,
+                        Time = day.Key,
+                        Dust = day.Average(x => hourlyData.dust![x.Index] ?? 0),
+                        AlderPollen = day.Average(x => hourlyData.alder_pollen![x.Index] ?? 0),
+                        BirchPollen = day.Average(x => hourlyData.birch_pollen![x.Index] ?? 0),
+                        GrassPollen = day.Average(x => hourlyData.grass_pollen![x.Index] ?? 0),
+                        MugwortPollen = day.Average(x => hourlyData.mugwort_pollen![x.Index] ?? 0),
+                        OlivePollen = day.Average(x => hourlyData.olive_pollen![x.Index] ?? 0),
+                        RagweedPollen = day.Average(x => hourlyData.ragweed_pollen![x.Index] ?? 0),
+                        PM10 = day.Average(x => hourlyData.pm10![x.Index] ?? 0),
+                        PM2_5 = day.Average(x => hourlyData.pm2_5![x.Index] ?? 0),
+                        AQI = day.Average(x => hourlyData.european_aqi![x.Index] ?? 0),
+                        O3 = day.Average(x => hourlyData.ozone![x.Index] ?? 0),
+                        NO2 = day.Average(x => hourlyData.nitrogen_dioxide![x.Index] ?? 0)
+                    });
+                }
+            }
+            return result;
+            //throw new NotImplementedException();
+        }
 
 
         private async Task<List<RegionCenterDto>> ExtractCenters(OpenMeteoParams paramsType)
@@ -242,7 +286,7 @@ namespace ForecastService.Services
 
         private string CreateQueryUrl<TRequest>(TRequest queryParams, string url)
         {
-            _logger.LogInformation($"Creating request with URL: {url} and query parameters: {queryParams}");
+            //_logger.LogInformation($"Creating request with URL: {url} and query parameters: {queryParams}");
             var query = new QueryString();
 
             foreach (var property in typeof(TRequest).GetProperties())
@@ -262,7 +306,7 @@ namespace ForecastService.Services
 
             if (string.IsNullOrEmpty(query.Value))
                 throw new ArgumentException("No valid query parameters provided.");
-            _logger.LogInformation($"Request url created successfully: {url} + {query.Value}");
+            //_logger.LogInformation($"Request url created successfully: {url} + {query.Value}");
 
             return url + query.Value.TrimStart('?');
         }

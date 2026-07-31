@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection.Metadata;
 using YpenService.Helpers;
@@ -114,6 +115,24 @@ namespace ForecastService.Helpers
             return weatherData;
         }
 
+        #endregion
+
+        #region Time
+        public async Task<DateOnly?> GetTimeAsync()
+        {
+            string methodName = "GetTimeAsync";
+            logger.LogInformation($"IN {methodName}");
+            logger.LogInformation("Acquiring latest time from DB");
+            if (!await dbCont.Weather.AnyAsync())
+            {
+                logger.LogError("No weather data found in DB");
+                throw new SqlNullValueException("No weather data found in DB");
+            }
+            DateOnly earliest = await dbCont.Weather.MinAsync(w => w.Time);
+            logger.LogInformation($"Latest time acquired: {earliest}");
+            logger.LogInformation($"OUT {methodName}");
+            return earliest;
+        }
         #endregion
     }
 }

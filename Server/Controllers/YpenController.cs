@@ -86,24 +86,14 @@ namespace API.Controllers
         #region Init Endpoints
         //[Authorize]
         [Obsolete]
-        [HttpGet("SaveRegionData")]
+        [HttpGet("loadCadastralData")]
         [ProducesResponseType(typeof(ApiResponse<List<RegionUnit>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<List<RegionUnit>> GetRegionData()
+        public async Task<List<RegionUnit>> LoadCadastralData()
         {
-            _logger.LogInformation($"Requesting Greek regional unit shapes and centers from YPEN");
-            var centers = await _ypenService.GetYpenRegionCenters();
-            var units = await _ypenService.GetYpenRegionUnits();
-            if (!centers.IsSuccess || !units.IsSuccess)
-            {
-                string error = centers.ErrorMessage ?? units.ErrorMessage ?? "Unknown Error on Units and Centers request";
-                _logger.LogError($"Failed to retrieve region centers from YPEN: {error}");
-                throw new Exception(error);
-            }
-            var persistResp = await _ypenService.PersistUnits(centers.Response!, units.Response!);
-            return persistResp;
+            return await _ypenService.ImportRegions();
         }
         #endregion
     }

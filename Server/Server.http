@@ -4,3 +4,26 @@ GET {{Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{Server_HostAddress}}/api/Forecast/weatherIndex/27/
+Accept: application/json
+
+###
+
+GET {{Server_HostAddress}}/api/Forecast/weatherIndexes/
+Accept: application/json
+
+###
+
+GET {{Server_HostAddress}}/api/Forecast/airQualityIndex/23/
+Accept: application/json
+
+###
+
+GET {{Server_HostAddress}}/api/Forecast/airQualityIndexes/
+Accept: application/json
+
+###
+
+GET {{Server_HostAddress}}/api/Forecast/CheckTime/
+Accept: application/json

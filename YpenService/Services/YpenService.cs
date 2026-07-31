@@ -179,6 +179,21 @@ namespace YpenService.Services
                 throw new Exception(ex?.Message ?? $"Exception on method {method} acquiring and storing Region Center locations");
             }
         }
+
+        public async Task<List<RegionUnit>> ImportRegions()
+        {
+            logger.LogInformation($"Requesting Greek regional unit shapes and centers from YPEN");
+            var centers = await GetYpenRegionCenters();
+            var units = await GetYpenRegionUnits();
+            if (!centers.IsSuccess || !units.IsSuccess)
+            {
+                string error = centers.ErrorMessage ?? units.ErrorMessage ?? "Unknown Error on Units and Centers request";
+                logger.LogError($"Failed to retrieve region centers from YPEN: {error}");
+                throw new Exception(error);
+            }
+            var persistResp = await PersistUnits(centers.Response!, units.Response!);
+            return persistResp;
+        }
         #endregion
 
         private MemoryCacheEntryOptions GetCacheOptions()

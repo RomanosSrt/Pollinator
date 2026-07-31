@@ -226,3 +226,12 @@ Shows the selected region's cached data:
 | **Reliability** | If the daily job fails, last good cache is still served (`fetched_at` proves freshness) |
 | **Maintainability** | Clean layers; documented spatial queries; explainable scoring |
 | **Academic Integrity** | All logic traceable; no black-box ML; scientific citations (Odoux et al., 2009); Open-Meteo / CAMS attribution required |
+
+--- 
+
+## Deployment
+
+The application requires a PostgreSQL (postGIS) DB. Run a postgres container on the same host with the following command:
+```bash
+docker run --name pollinator-pg-test -e POSTGRES_USER=pollinator_user -e POSTGRES_PASSWORD=dxAkLf5xRdtBb -e POSTGRES_DB=pollinator_db -p 5432:5432 -d postgis/postgis  
+```

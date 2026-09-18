@@ -42,18 +42,19 @@ using (var scope = app.Services.CreateScope())
         ypenDbContext.Database.Migrate();
         var forecastServices = scope.ServiceProvider.GetRequiredService<IForecastDataService>();
         var ypenServices = scope.ServiceProvider.GetRequiredService<IYpenService>();
+        if (!ypenDbContext.RegionUnits.Any())
+            await ypenServices.ImportRegions();
         if (await forecastServices.CheckDBData())
         {
-            await ypenServices.ImportRegions();
             await forecastServices.LoadAirQualForecast();
             await forecastServices.LoadWeatherForecast();
+            app.Logger.LogInformation("Database migration completed successfully");
         }
     } catch (Exception ex)
     {
         app.Logger.LogError("Database Migration failed with error: {ErrorMessage}", ex.Message);
     }
 }
-app.Logger.LogInformation("Database migration completed successfully");
 
 
 // Configure the HTTP request pipeline.
@@ -66,9 +67,9 @@ if (app.Environment.IsDevelopment())
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend"); // Must come BEFORE UseAuthentication/UseAuthorization
+app.UseMiddleware<ResponseMiddleware>();
 app.UseAuthentication();        //Must come BEFORE UseAuthorization
 app.UseAuthorization();
-app.UseMiddleware<ResponseMiddleware>();
 
 app.MapControllers();
 

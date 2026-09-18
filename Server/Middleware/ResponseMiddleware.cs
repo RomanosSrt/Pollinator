@@ -103,8 +103,13 @@ namespace API.Middleware
         {
             context.Response.Body = originalBodyStream;
             context.Response.ContentType = "application/json";
-            var responseBody = JsonSerializer.Serialize(response);
+            var responseBody = JsonSerializer.Serialize(response, _envelopeJsonOptions);
             await context.Response.WriteAsync(responseBody);
         }
+
+        private static readonly JsonSerializerOptions _envelopeJsonOptions = new(JsonSerializerOptions.Default)
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using API.Domain.Entities.UserManagement;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 namespace API.Application.DTOs.UserInsertion;
 
@@ -15,5 +16,6 @@ public class UserDto
     public string name { get; set; } = string.Empty;
     [Required]
     [EnumDataType(typeof(UserType))]
+    [JsonConverter(typeof(JsonStringEnumConverter<UserType>))]
     public UserType userType { get; set; }
 }

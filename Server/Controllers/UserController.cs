@@ -32,19 +32,19 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        [ProducesResponseType(typeof(ApiResponse<LoginResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<AuthResultDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<LoginResponseDto> LoginUser([FromBody] LoginDto loginDto)
+        public async Task<AuthResultDto> LoginUser([FromBody] LoginDto loginDto)
         {
             _logger.LogInformation("Logging in user with email: {Email}", loginDto.Email);
-            var token = await _userService.LoginUser(loginDto);
-            if (string.IsNullOrEmpty(token))
+            var result = await _userService.LoginUser(loginDto);
+            if (result is null)
             {
                 throw new Exception("Invalid credentials");
             }
-            return new LoginResponseDto(token);
+            return result;
         }
 
         [HttpGet("findByEmail/{email}")]

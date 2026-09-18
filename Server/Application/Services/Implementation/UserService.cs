@@ -34,7 +34,7 @@ namespace API.Application.Services.Implementation
         }
         public async Task<AuthResultDto> CreateUser(UserDto user)
         {
-            bool emailCheck = _userRepository.GetUserByEmailAsync(user.email) != null;
+            bool emailCheck = await _userRepository.GetUserByEmailAsync(user.email) != null;
             if (emailCheck)
             {
                 _logger.LogWarning("Attempt to create user with existing email {Email}", user.email);
@@ -50,16 +50,16 @@ namespace API.Application.Services.Implementation
             return _jwtService.GenerateToken(newUser);
         }
 
-        public async Task<string?> LoginUser(LoginDto loginDto)
+        public async Task<AuthResultDto?> LoginUser(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
             if (user == null)
             {
                 _logger.LogWarning("Login failed for email {Email}: user not found", loginDto.Email);
-                return string.Empty;
+                return null;
             }
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
-            return result.Succeeded ? _jwtService.GenerateToken(user).Token : string.Empty;
+            return result.Succeeded ? _jwtService.GenerateToken(user) : null;
         }
 
         public async Task<UserDto?> GetUserByEmailAsync(string email)

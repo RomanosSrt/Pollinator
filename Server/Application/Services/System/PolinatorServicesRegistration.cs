@@ -107,15 +107,15 @@ namespace API.Application.Services.System
                 .AddPolicy("BeekeeperOnly", policy => policy.RequireRole("BEEKEEPER"))
                 .AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
 
-            /*services.AddCors(options =>
+            services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.WithOrigins("https://myfrontend.com")
+                    policy.WithOrigins("http://localhost:4200")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
-            });*/
+            });
             #endregion
 
             //#region response optimization

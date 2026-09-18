@@ -65,7 +65,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseResponseCompression();
 app.UseHttpsRedirection();
-//app.UseCors("AllowFrontend"); // Must come BEFORE UseAuthentication/UseAuthorization
+app.UseCors("AllowFrontend"); // Must come BEFORE UseAuthentication/UseAuthorization
 app.UseAuthentication();        //Must come BEFORE UseAuthorization
 app.UseAuthorization();
 app.UseMiddleware<ResponseMiddleware>();

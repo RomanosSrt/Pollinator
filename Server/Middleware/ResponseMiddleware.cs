@@ -65,6 +65,7 @@ namespace API.Middleware
                         TraceId = context.TraceIdentifier 
                     };
                     await WriteResponse(context, ErrorResponse, originalBodyStream);
+                    return;
                 }
             }
 

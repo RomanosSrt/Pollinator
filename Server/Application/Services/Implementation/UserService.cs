@@ -41,6 +41,7 @@ namespace API.Application.Services.Implementation
                 throw new Exception("Email or username already exists");
             }
             var newUser = _mapper.Map<ApplicationUser>(user);
+            newUser.userType = UserType.BEEKEEPER;      //I removed the users every one is a beekeeper
             var result = await _userManager.CreateAsync(newUser, user.password);
             if (!result.Succeeded)
             {

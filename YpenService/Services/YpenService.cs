@@ -77,9 +77,10 @@ namespace YpenService.Services
                     return [.. cachedCenters!];
                 }
                 List<RegionCenter> centers = await repo.GetCentersAsync();
-                cache.Set(cacheKey, centers, GetCacheOptions());
+                var mapped = mapper.Map<List<RegionCenterDto>>(centers);
+                cache.Set(cacheKey, mapped, GetCacheOptions());
                 logger.LogInformation($"OUT Method {method}");
-                return mapper.Map<List<RegionCenterDto>>(centers);
+                return mapped;
             }
             catch (Exception ex)
             {

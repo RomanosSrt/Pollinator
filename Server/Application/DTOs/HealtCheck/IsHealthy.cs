@@ -6,7 +6,7 @@
 
         public IsHealthy()
         {
-            status = "Pollinator is healthy!";
+            status = "Pollinator is healthy and live!";
         }
     }
 }

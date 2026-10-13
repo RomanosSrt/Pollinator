@@ -103,15 +103,18 @@ namespace API.Application.Services.System
             });
 
 
-            services.AddAuthorizationBuilder()
-                .AddPolicy("BeekeeperOnly", policy => policy.RequireRole("BEEKEEPER"))
-                .AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
+            //services.AddAuthorizationBuilder()
+            //    .AddPolicy("BeekeeperOnly", policy => policy.RequireRole("BEEKEEPER"))
+            //    .AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
+
+            var allowedOrigins = (configuration["Cors:AllowedOrigins"] ?? "http://localhost:4200")
+                .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.WithOrigins("http://localhost:4200")
+                    policy.WithOrigins(allowedOrigins)
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });

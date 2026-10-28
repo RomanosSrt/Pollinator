@@ -69,7 +69,8 @@ namespace API.Application.Services.Implementation
             if (user == null)
             {
                 _logger.LogWarning("User with email {Email} not found", email);
-                throw new Exception("User not found");
+                //throw new Exception("User not found");
+                return new UserDto();
             }
             return _mapper.Map<UserDto>(user);
         }
@@ -80,7 +81,8 @@ namespace API.Application.Services.Implementation
             if (user == null)
             {
                 _logger.LogWarning("User with username {Username} not found", username);
-                throw new Exception("User not found");
+                //throw new Exception("User not found");
+                return new UserDto();
             }
             return _mapper.Map<UserDto>(user);
         }

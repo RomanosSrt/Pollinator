@@ -107,7 +107,7 @@ namespace API.Application.Services.System
             //    .AddPolicy("BeekeeperOnly", policy => policy.RequireRole("BEEKEEPER"))
             //    .AddPolicy("AdminOnly", policy => policy.RequireRole("ADMIN"));
 
-            var allowedOrigins = (configuration["Cors:AllowedOrigins"] ?? "http://localhost:4200")
+            var allowedOrigins = ("http://localhost:4200") //(configuration["Cors:AllowedOrigins"] ?? "http://localhost:4200")
                 .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
             services.AddCors(options =>

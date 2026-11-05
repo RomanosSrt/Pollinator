@@ -52,13 +52,13 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<UserDto> GetUserByEmail(string email)
+        public async Task<UserDto?> GetUserByEmail(string email)
         {
             var user = await _userService.GetUserByEmailAsync(email);
             if (user == null)
             {
                 _logger.LogWarning("No user found with email: {Email}", email);
-                throw new Exception("No user exists with the provided email");
+                //throw new Exception("No user exists with the provided email");
             }
             return user;
         }
@@ -68,13 +68,13 @@ namespace API.Controllers
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status500InternalServerError)]
-        public async Task<UserDto> GetUserByUsername(string username)
+        public async Task<UserDto?> GetUserByUsername(string username)
         {
             var user = await _userService.GetUserByUsernameAsync(username);
             if (user == null)
             {
                 _logger.LogWarning("No user found with username: {Username}", username);
-                throw new Exception("No user exists with the provided username");
+                //throw new Exception("No user exists with the provided username");
             }
             return user;
         }

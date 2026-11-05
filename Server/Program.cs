@@ -6,6 +6,7 @@ using ForecastService.Services;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.IO.Converters;
 using Serilog;
+using Server.Application.Services.System;
 using YpenService.Contracts;
 using YpenService.Helpers;
 using YpenService.Services;
@@ -28,6 +29,7 @@ builder.Services.AddPersistenceServices(connectionString);
 builder.Services.RegisterPollinatorServices(builder.Configuration);
 builder.Services.AddForecastServices(builder.Configuration);
 builder.Services.AddYpenServices(builder.Configuration);
+builder.Services.AddHostedService<ForecastRefreshService>();
 
 var app = builder.Build();
 app.Logger.LogInformation("Application started at {Date}", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")); 
@@ -44,12 +46,6 @@ using (var scope = app.Services.CreateScope())
         var ypenServices = scope.ServiceProvider.GetRequiredService<IYpenService>();
         if (!ypenDbContext.RegionUnits.Any())
             await ypenServices.ImportRegions();
-        if (await forecastServices.CheckDBData())
-        {
-            await forecastServices.LoadAirQualForecast();
-            await forecastServices.LoadWeatherForecast();
-            app.Logger.LogInformation("Database migration completed successfully");
-        }
     } catch (Exception ex)
     {
         app.Logger.LogError("Database Migration failed with error: {ErrorMessage}", ex.Message);

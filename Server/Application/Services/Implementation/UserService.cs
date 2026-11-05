@@ -70,7 +70,7 @@ namespace API.Application.Services.Implementation
             {
                 _logger.LogWarning("User with email {Email} not found", email);
                 //throw new Exception("User not found");
-                return new UserDto();
+                return null;
             }
             return _mapper.Map<UserDto>(user);
         }
@@ -82,7 +82,7 @@ namespace API.Application.Services.Implementation
             {
                 _logger.LogWarning("User with username {Username} not found", username);
                 //throw new Exception("User not found");
-                return new UserDto();
+                return null;
             }
             return _mapper.Map<UserDto>(user);
         }

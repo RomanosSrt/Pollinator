@@ -44,6 +44,9 @@ namespace API.Middleware
         }
         private async Task HandleSuccessResponse(HttpContext context, MemoryStream newBody, Stream originalBodyStream)
         {
+            if (context.Response.StatusCode == StatusCodes.Status204NoContent)
+                context.Response.StatusCode = StatusCodes.Status200OK;
+
             newBody.Seek(0, SeekOrigin.Begin);
             var BodyText = await new StreamReader(newBody).ReadToEndAsync();
 

@@ -258,7 +258,9 @@ namespace ForecastService.Services
         private async Task<List<RegionCenterDto>> ExtractCenters(OpenMeteoParams paramsType)
         {
             _logger.LogInformation($"Acquiring region centers for forecast data request");
-            List<RegionCenterDto> centers = (await _ypenService.GetCenters()).OrderBy(c => c.KALCODE).ToList();
+            List<RegionCenterDto> centers = (await _ypenService.GetCenters())
+                .Where(c => c.Latitude != 0 || c.Longitude != 0)
+                .OrderBy(c => c.KALCODE).ToList();
             if (!centers.Any())
                 throw new Exception("No region centers found.");
             paramsType.Latitudes.Clear();

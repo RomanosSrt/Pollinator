@@ -1,0 +1,12 @@
+<mat-toolbar class="gap-3">
+  <span class="text-lg font-medium">🐝 Pollinator</span>
+  <span class="flex-1"></span>
+  @if (auth.isLoggedIn()) {
+    <span class="hidden text-sm sm:inline">{{ auth.session()?.email }} · {{ auth.session()?.userType }}</span>
+    <button matButton="outlined" (click)="logout()">Log out</button>
+  }
+</mat-toolbar>
+
+<main>
+  <router-outlet />
+</main>

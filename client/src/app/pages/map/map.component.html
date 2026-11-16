@@ -1,0 +1,50 @@
+<div class="flex h-[calc(100dvh-4rem)] flex-col">
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 pt-3">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="w-60">
+      <mat-label>Metric</mat-label>
+      <mat-select [value]="metricKey()" [disabled]="forecastLoading()" (selectionChange)="selectMetric($event.value)">
+        @for (group of groups; track group.name) {
+          <mat-optgroup [label]="group.name">
+            @for (m of group.metrics; track m.key) {
+              <mat-option [value]="m.key">{{ m.label }}</mat-option>
+            }
+          </mat-optgroup>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-button-toggle-group
+      aria-label="Forecast day"
+      hideSingleSelectionIndicator
+      [value]="day()"
+      [disabled]="forecastLoading()"
+      (change)="day.set($event.value)"
+    >
+      @for (d of days(); track d) {
+        <mat-button-toggle [value]="d">{{ dayLabel(d) }}</mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+
+    @if (staleSince(); as first) {
+      <span class="text-xs text-amber-800">Forecast data starts {{ first }}, which is before today.</span>
+    }
+  </div>
+
+  <div class="relative mt-3 min-h-0 flex-1">
+    @if (loading() || forecastLoading()) {
+      <mat-progress-bar class="absolute top-0 left-0 z-[1000]" mode="indeterminate" />
+    }
+    <div #map class="h-full w-full"></div>
+
+    @if (!forecastLoading()) {
+      <div class="absolute bottom-6 left-3 z-[1000] rounded bg-white/90 p-2 text-xs shadow">
+        <div class="font-medium">{{ metric().label }} ({{ metric().unit }})</div>
+        <div class="my-1 h-2 w-44 rounded" [style.background]="gradient"></div>
+        <div class="flex justify-between">
+          <span>{{ format(range().min) }}</span>
+          <span>{{ format(range().max) }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

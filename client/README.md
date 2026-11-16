@@ -1,59 +1,45 @@
-# Client
+# Pollinator — Angular client
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.19.
+A deliberately small Angular 21 app that talks to the Pollinator ASP.NET Core API.
+Right now it does one thing: **register / log in** a beekeeper through `UserController`,
+then show a page that explains what happened.
 
-## Development server
+## Run it
 
-To start a local development server, run:
+1. Start the backend with the **http** launch profile (API on `http://localhost:5147`).
+2. In this folder:
 
-```bash
-ng serve
+   ```bash
+   npm install     # first time, or after package.json changes
+   npm start       # = ng serve  ->  http://localhost:4200
+   ```
+
+3. Run the unit tests: `npm test`
+
+## Folder structure
+
+```
+src/
+├── index.html                 # the single HTML page; <app-root> is replaced by App
+├── main.ts                    # starts Angular with App + appConfig
+├── styles.css                 # global styles (colours, buttons, form fields)
+├── environments/
+│   └── environment.ts         # apiBaseUrl
+└── app/
+    ├── app.ts / .html / .css  # shell: header + <router-outlet>
+    ├── app.config.ts          # providers: router, HttpClient
+    ├── app.routes.ts          # URL -> page
+    ├── core/                  # non-visual code shared by pages
+    │   ├── models/            # TypeScript interfaces mirroring the backend DTOs
+    │   ├── services/          # AuthService: the only code that calls UserController
+    │   └── guards/            # authGuard: protects /session
+    └── pages/                 # one folder per routed page
+        ├── welcome/           # "/"        intro + login/register forms
+        └── session/           # "/session" what happened during login/register
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Flow
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+`WelcomePage` (form) → `AuthService.login()/register()` → `POST /api/User/...`
+→ unwrap `ApiResponse` envelope → save in signal + localStorage
+→ router navigates to `/session` → `authGuard` allows it → `SessionPage` shows the details.

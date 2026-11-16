@@ -14,7 +14,7 @@ using System.Text.Json;
 
 namespace API.Controllers
 {
-    //[Authorize]       TODO: Add authorization on production
+    [Authorize]       //TODO: Add authorization on production
     [ApiController]
     [Obsolete]
     [Route("api/[controller]")]

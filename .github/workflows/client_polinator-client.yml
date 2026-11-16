@@ -1,0 +1,36 @@
+name: Build and deploy Angular client to Azure Web App - pollinator-client
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'client/**'
+      - '.github/workflows/client_pollinator-client.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install
+        run: npm ci
+        working-directory: client
+
+      - name: Build
+        run: npx ng build --configuration production
+        working-directory: client
+
+      - name: Deploy
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: pollinator-client
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_CLIENT }}
+          package: client/dist/client/browser

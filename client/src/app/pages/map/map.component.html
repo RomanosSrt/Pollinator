@@ -25,6 +25,8 @@
       }
     </mat-button-toggle-group>
 
+    <mat-slide-toggle [checked]="effectsOn()" (change)="effectsOn.set($event.checked)">Animated effects</mat-slide-toggle>
+
     @if (staleSince(); as first) {
       <span class="text-xs text-amber-800">Forecast data starts {{ first }}, which is before today.</span>
     }
@@ -34,17 +36,26 @@
     @if (loading() || forecastLoading()) {
       <mat-progress-bar class="absolute top-0 left-0 z-[1000]" mode="indeterminate" />
     }
+    <!-- Gradients for the pulsing temperature fills. Size 0 (not display:none, which breaks gradients in Chrome). -->
+    <svg class="absolute h-0 w-0" aria-hidden="true" focusable="false">
+      <defs>
+        @for (g of gradients(); track g.id) {
+          <radialGradient [attr.id]="g.id" cx="0.5" cy="0.5" r="0.7">
+            <stop offset="0" [attr.stop-color]="g.color" stop-opacity="1" />
+            <stop offset="0.25" [attr.stop-color]="g.color" stop-opacity="0.85">
+              @if (!reducedMotion) {
+                <animate attributeName="offset" values="0.25;0.8;0.25" [attr.dur]="g.dur + 's'" repeatCount="indefinite" />
+              }
+            </stop>
+            <stop offset="1" [attr.stop-color]="g.color" stop-opacity="0.35" />
+          </radialGradient>
+        }
+      </defs>
+    </svg>
     <div #map class="h-full w-full"></div>
 
     @if (!forecastLoading()) {
-      <div class="absolute bottom-6 left-3 z-[1000] rounded bg-white/90 p-2 text-xs shadow">
-        <div class="font-medium">{{ metric().label }} ({{ metric().unit }})</div>
-        <div class="my-1 h-2 w-44 rounded" [style.background]="gradient"></div>
-        <div class="flex justify-between">
-          <span>{{ format(range().min) }}</span>
-          <span>{{ format(range().max) }}</span>
-        </div>
-      </div>
+      <app-band-legend class="absolute bottom-6 left-3 z-[1000]" [metric]="metric()" />
     }
   </div>
 </div>

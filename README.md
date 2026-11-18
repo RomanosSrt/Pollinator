@@ -203,7 +203,15 @@ Full-screen Greece map (Leaflet + OpenStreetMap). The 74 regional units drawn as
 - **Day selector:** today + next 4 days; changes the **weather** coloring and the detail panel's weather figures. Pollen/air remain the single current snapshot (labeled honestly as "current," weather labeled "forecast for <date>").
 - **Actions:** click a region → opens Region Detail. Switch metric. Switch day.
 
-> **Implementation note:** all 74 polygons render at once and stay colored — coloring is **not** tied to map pan/zoom. Interaction is by **click**, not by moving the map. Avoid per-region images/effects (complexity with no added value); use a WMO weather icon inside the detail/popup instead.
+> **Implementation note:** all 74 polygons render at once and stay colored — coloring is **not** tied to map pan/zoom. Interaction is by **click**, not by moving the map.
+
+**Visuals per metric (bands, animation, badge):** one metric is shown at a time, and every region is styled from the band its value falls in. All thresholds, colours and animation types live in one data file, `client/src/app/pages/map/metric-scales.ts`; edit it to change a colour or limit.
+- **Colour:** each band has a colour (European AQI colours for AQI, PM2.5, PM10, O₃ and NO₂ on the 0–100+ scale; pollen, dust, wind, precipitation, humidity and WMO weather groups have their own bands). Max and min temperature use a pulsing radial gradient instead (an SVG `radialGradient` per region, faster pulse for hotter bands).
+- **Alarm border:** PM2.5, PM10, O₃, NO₂ and dust get a pulsing red outline from the "poor" band upwards (CSS class `fx-alarm`).
+- **Particles:** `fx-layer.ts` puts a tsParticles container inside each region, cut to the region's outline with CSS `clip-path` in a custom Leaflet pane; `fx-presets.ts` holds the options per effect: bees (pollen), smog (PM2.5, PM10), blown dust, wind streaks, rain (precipitation chance), mist (humidity) and, for the weather metric, rain, snow, mist or stormy flashes depending on the WMO group. More particles for worse bands; the calmest band shows none. They can be switched off with the "Animated effects" toggle and are not drawn when the OS asks for reduced motion.
+- **Weather badge:** only for the *Weather (WMO code)* metric, a Meteocons Lottie icon at each region centre when zoomed in (files in `client/public/weather/`).
+- **Legend and card:** the legend lists the bands of the chosen metric; hovering a region shows value and band, clicking it opens a card listing all metrics for the chosen day with coloured dots.
+- **Data:** `aqi`, `pM2_5`, `pM10`, `o3` and `nO2` must be European AQI values (Open-Meteo `european_aqi*`); pollen in grains/m³, dust in µg/m³, temperatures °C, wind km/h, precipitation chance and humidity in %.
 
 ### 3. Region Detail 
 Shows the selected region's cached data:

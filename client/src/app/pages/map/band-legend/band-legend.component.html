@@ -1,0 +1,15 @@
+<div class="rounded bg-white/90 p-2 text-xs shadow">
+  <div class="mb-1 font-medium">{{ metric().label }} ({{ metric().unit }})</div>
+
+  @for (row of rows(); track row.label) {
+    <div class="flex items-center gap-2 leading-5">
+      <span class="size-3 shrink-0 rounded-full border border-black/25" [style.background]="row.color"></span>
+      <span class="flex-1">{{ row.label }}</span>
+      <span class="text-gray-600">{{ row.range }}</span>
+    </div>
+  }
+
+  @if (alarmNote()) {
+    <div class="mt-1 text-[10px] text-red-700">{{ alarmNote() }}</div>
+  }
+</div>

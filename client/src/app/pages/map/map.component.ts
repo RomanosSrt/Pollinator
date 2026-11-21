@@ -59,7 +59,7 @@ export class MapComponent {
 
   protected readonly loading = signal(true); // map layers
   protected readonly forecastLoading = signal(true);
-  protected readonly metricKey = signal('temperatureMax');
+  protected readonly metricKey = signal('wmoCode');
   protected readonly day = signal('');
   protected readonly effectsOn = signal(true);
 
